@@ -1,66 +1,144 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
+class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+
+    return FutureBuilder(
+      // Initialize FlutterFire
+      future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
+
+        // Check for errors
+        if (snapshot.hasError) {
+            return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                home: ErrorPage(title: 'Error'),
+          );
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: LoginPage(title: 'Go to office'),
+          );
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return Container(); //-> TBD
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class ErrorPage extends StatelessWidget{
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  ErrorPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SingleChildScrollView(
+          child: Center(
+            child: Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(36.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 200.0,
+                      child: Image.asset(
+                        "assets/error.jpg",
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        )
+    );
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
 
   String loginUser = "Login as User";
   String loginAdmin = "Login as Admin";
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final _userTextController = TextEditingController();
+  final _passTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _userTextController.dispose();
+    _passTextController.dispose();
+    super.dispose();
+  }
+
+  void login() async{
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _userTextController.text,
+          password: _passTextController.text
+      );
+      final snackBar = SnackBar(content: Text("User Logged in = ${userCredential.user}"));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      dispose();
+
+    } on FirebaseAuthException catch (e) {
+      final snackBar = SnackBar(content: Text(e.code));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
 
     void _onLoginRequest(BuildContext context, String pressedOption) {
-      final snackBar = SnackBar(content: Text(pressedOption));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      if (pressedOption == loginUser) {
+        login();
+      } else {
+        final snackBar = SnackBar(content: Text(pressedOption));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // Orly's implementation
+      }
+
     }
 
     final emailField = TextField(
       obscureText: true,
+      controller: _userTextController,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Email",
@@ -70,6 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final passwordField = TextField(
       obscureText: true,
+      controller: _passTextController,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Password",
@@ -113,7 +192,35 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
+    final appBar = AppBar(
+      title: Text(widget.title),
+      actions: <Widget>[
+        Builder(builder: (BuildContext context) {
+
+          return FlatButton(
+            child: const Text('Sign out'),
+            textColor: Theme
+                .of(context)
+                .buttonColor,
+            onPressed: () async {
+              final User user = _auth.currentUser;
+              if (user == null) {
+                final snackBar = SnackBar(content: Text('No one has signed in.'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                return;
+              }
+              await _auth.signOut();
+              final String uid = user.uid;
+              final snackBar = SnackBar(content: Text(uid + ' has successfully signed out.'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            },
+          );
+        })
+      ],
+    );
+
     return Scaffold(
+        appBar: appBar,
         body: SingleChildScrollView(
           child: Center(
             child: Container(

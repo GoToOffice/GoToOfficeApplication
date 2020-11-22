@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.go_to_office">
+    package="com.logmein.go_to_office">
    <application
         android:label="go_to_office"
         android:icon="@mipmap/ic_launcher">
