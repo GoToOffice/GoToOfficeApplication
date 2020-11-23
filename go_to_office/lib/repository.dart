@@ -17,11 +17,12 @@ class FirebaseRepository implements Repository {
   @override
   Future initialize() async {
     await Firebase.initializeApp();
+    _auth = FirebaseAuth.instance;
   }
 
   @override
   Future<String> signOut() async {
-    final User user = _auth.currentUser;
+    User user = _auth.currentUser;
     if (user == null) {
       return Strings.sign_out_failed;
     }
@@ -31,7 +32,7 @@ class FirebaseRepository implements Repository {
 
   @override
   Future<String> signIn(String _email, String _password) async {
-    UserCredential userCredential = await FirebaseAuth.instance
+    UserCredential userCredential = await _auth
         .createUserWithEmailAndPassword(email: _email, password: _password);
     return userCredential.user.uid;
   }
