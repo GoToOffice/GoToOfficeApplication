@@ -1,49 +1,42 @@
 import 'package:flutter/material.dart';
-import 'auth_repo.dart';
+import 'repository.dart';
 import 'login_page.dart';
+import 'strings.dart';
 
 void main() {
-  runApp(App());
+  runApp(GTOApp());
 }
 
-class App extends StatelessWidget {
+class GTOApp extends StatelessWidget {
   // This widget is the root of the application.
 
-  Repository firebaseAuth = FirebaseRepository();
-
-  Widget getLoginPage() {
-    firebaseAuth.initialize()
-        .then((value) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              home: LoginPage(title: "oz", authManager: firebaseAuth),
-            );
-    });
-  }
+  final Repository firebaseAuth = FirebaseRepository();
 
   @override
   Widget build(BuildContext context) {
-    getLoginPage();
-  }
+    return FutureBuilder(
+      // Initialize FlutterFire
+      future: firebaseAuth.initialize(),
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: ErrorPage(title: 'Error'),
+          );
+        }
 
-  /*  if (snapshot.hasError) {
-      throw snapshot.error;*//*
-    return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: ErrorPage(title: 'Error'),
-    );*//*
-    }
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: LoginPage(title: Strings.app_name, repository: firebaseAuth),
+          );
+        }
 
-    if (snapshot.connectionState == ConnectionState.done) {
-    _auth = FirebaseAuth.instance;
-    return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: loginPage,
+        // Otherwise, show something whilst waiting for initialization to complete
+        return Container(); //-> TBD
+      },
     );
-    }
-
-    // Otherwise, show something whilst waiting for initialization to complete
-    return Container(); //-> TBD
   }
-  } */
 }
