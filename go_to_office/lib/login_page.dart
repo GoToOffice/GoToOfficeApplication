@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'repository.dart';
 import 'strings.dart';
+import 'admin/officesList.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title, this.repository}) : super(key: key);
@@ -32,13 +33,13 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     void showSnack(String text) {
       final snackBar = SnackBar(content: Text(text));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+     // ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     void onError(String text) {
       final snackBar =
           SnackBar(content: Text(text), backgroundColor: Colors.red);
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //  ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     void _onLoginRequest(BuildContext context, String pressedOption) {
@@ -56,6 +57,13 @@ class _LoginPageState extends State<LoginPage> {
           }
           onError(text);
         });
+      };
+      if (pressedOption == Strings.loginAdmin) {
+        Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => OfficesListPage()),
+                    );
+
       }
     }
 
