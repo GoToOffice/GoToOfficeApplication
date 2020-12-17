@@ -41,7 +41,7 @@ class _OfficePageState extends State<OfficePage> {
           title: Text("Office Manager"),
           backgroundColor: Colors.blueAccent,
         ),
-        body: Container(
+        body: SingleChildScrollView(
             padding: EdgeInsets.all(15.0),
             child: Column(
               children: <Widget>[

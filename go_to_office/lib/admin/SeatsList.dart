@@ -32,7 +32,7 @@ class _SeatsListPageState extends State<SeatsListPage> {
         appBar: AppBar(
           title: Text("Seats"),
         ),
-        body: Container(
+        body: SingleChildScrollView(
           padding: EdgeInsets.all(15.0),
           child: Column (
             mainAxisSize: MainAxisSize.min,

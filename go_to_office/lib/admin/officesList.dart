@@ -27,7 +27,7 @@ class _OfficesListPageState extends State<OfficesListPage> {
         appBar: AppBar(
           title: Text("Offices"),
         ),
-        body: Container(
+        body: SingleChildScrollView(
           padding: EdgeInsets.all(15.0),
           child: Column (
             mainAxisSize: MainAxisSize.min,

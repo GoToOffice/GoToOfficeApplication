@@ -38,7 +38,7 @@ class _SeatPageState extends State<SeatPage> {
           title: Text("Seats Manager"),
           backgroundColor: Colors.blueAccent,
         ),
-        body: Container(
+        body: SingleChildScrollView(
             padding: EdgeInsets.all(15.0),
             child: Column(
               children: <Widget>[
