@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
       return true;
     }
 
-    void launchUser(String pressedOption, String uid) {
+    void _dispatchLogin(String pressedOption, String uid) {
 
       _showSnack("User had been successfully logged in" + uid);
 
@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
         repository
             .signIn(_email, _password)
             .then((value) {
-          launchUser(pressedOption, value);
+          _dispatchLogin(pressedOption, value);
 
         }, onError: (error) {
 
@@ -114,9 +114,9 @@ class _LoginPageState extends State<LoginPage> {
                 .register(_email, _password)
                 .then((value) {
 
-                  launchUser(pressedOption, value);
+              _dispatchLogin(pressedOption, value);
 
-                  }, onError: (error) {_onError(error);});
+              }, onError: (error) {_onError(error);});
 
             return;
 
