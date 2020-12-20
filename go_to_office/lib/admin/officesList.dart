@@ -4,7 +4,7 @@ import '../strings.dart';
 
 void main() {
   runApp(new MaterialApp(
-    title: "Offices",
+    title: Strings.offices,
     home: new OfficesListPage(),
   ));
 }
@@ -25,7 +25,7 @@ class _OfficesListPageState extends State<OfficesListPage> {
     // Object officateAssreddress = {};
     return Scaffold(
         appBar: AppBar(
-          title: Text("Offices"),
+          title: Text(Strings.offices),
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(15.0),
@@ -33,7 +33,7 @@ class _OfficesListPageState extends State<OfficesListPage> {
             mainAxisSize: MainAxisSize.min,
              children: <Widget>[
               ElevatedButton(
-                child: Text('Add New Office'),
+                child: Text(Strings.add_new_office),
                 onPressed: () {
                   Navigator.push(
                     context,

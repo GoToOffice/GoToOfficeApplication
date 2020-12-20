@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'seat.page.dart';
 import 'seatsList.dart';
+import '../strings.dart';
 
 void main(id) {
   runApp(new MaterialApp(
-    title: "Office Manager",
+    title: Strings.office_manager,
     home: new OfficePage(id),
   ));
 }
@@ -38,7 +39,7 @@ class _OfficePageState extends State<OfficePage> {
     // Object officateAssreddress = {};
     return Scaffold(
         appBar: AppBar(
-          title: Text("Office Manager"),
+          title: Text(Strings.office_manager),
           backgroundColor: Colors.blueAccent,
         ),
         body: SingleChildScrollView(
@@ -48,7 +49,7 @@ class _OfficePageState extends State<OfficePage> {
                 TextFormField(
                   initialValue: this.officeName,
                     decoration:
-                        InputDecoration(hintText: 'Please insert Office name'),
+                        InputDecoration(hintText: Strings.insert_office_name),
                     onChanged: (String inputString) {
                       setState(() {
                         officeName = inputString;
@@ -57,7 +58,7 @@ class _OfficePageState extends State<OfficePage> {
                 TextFormField(
                   initialValue: this.officeCoutnry,
                     decoration:
-                        InputDecoration(hintText: 'Please insert Country'),
+                        InputDecoration(hintText: Strings.insert_office_country),
                     onChanged: (String inputString) {
                       setState(() {
                         officeCoutnry = inputString;
@@ -66,14 +67,14 @@ class _OfficePageState extends State<OfficePage> {
                 TextFormField(
                   initialValue: this.officeDescription,
                     decoration: InputDecoration(
-                        hintText: 'Please insert Office Description'),
+                        hintText: Strings.insert_office_description),
                     onChanged: (String inputString) {
                       setState(() {
                         officeDescription = inputString;
                       });
                     }),
                     ElevatedButton(
-                      child: Text('Add New Seat'),
+                      child: Text(Strings.add_new_seat),
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -82,7 +83,7 @@ class _OfficePageState extends State<OfficePage> {
                       },
                     ),
                     ElevatedButton(
-                      child: Text('View List of Seats'),
+                      child: Text(Strings.view_list_seats),
                       onPressed: () {
                         Navigator.push(
                           context,

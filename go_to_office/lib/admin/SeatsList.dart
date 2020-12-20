@@ -4,7 +4,7 @@ import '../strings.dart';
 
 void main(officeId) {
   runApp(new MaterialApp(
-    title: "Seats",
+    title: Strings.seats,
     home: new SeatsListPage(officeId),
   ));
 }
@@ -30,7 +30,7 @@ class _SeatsListPageState extends State<SeatsListPage> {
     // Object officateAssreddress = {};
     return Scaffold(
         appBar: AppBar(
-          title: Text("Seats"),
+          title: Text(Strings.seats),
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(15.0),
@@ -38,7 +38,7 @@ class _SeatsListPageState extends State<SeatsListPage> {
             mainAxisSize: MainAxisSize.min,
              children: <Widget>[
                  ElevatedButton(
-                child: Text('Add New Seat'),
+                child: Text(Strings.add_new_seat),
                 onPressed: () {
                   Navigator.push(
                     context,

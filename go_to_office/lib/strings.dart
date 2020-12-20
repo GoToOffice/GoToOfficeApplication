@@ -6,6 +6,16 @@ class Strings{
   static const sign_out_success= "Signed out successfully";
   static const loginUser= "Login as User";
   static const loginAdmin= "Login as Admin";
-  static const Email_hint= "Email";
   static const password_hint= "Password";
+  static const add_new_seat = "Add New Seat";
+  static const add_new_office = "Add New Office";
+  static const office_manager = "Office Manager";
+  static const insert_office_name =" Please insert Office name";
+  static const insert_office_country = "Please insert Country";
+  static const insert_office_description = "Please insert Office Description";
+  static const view_list_seats = "View List of Seats";
+  static const offices = "Offices";
+  static const seats = "Seats";
+  static const Email_hint= "Email";
+
 }
