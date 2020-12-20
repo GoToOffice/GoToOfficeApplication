@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
 
     void _dispatchLogin(String pressedOption, String uid) {
 
-      _showSnack("User had been successfully logged in" + uid);
+      // /*uncomment to present a snack*/ _showSnack("User had been successfully logged in" + uid);
 
       if (pressedOption == Strings.loginUser)
         onUserLoggedIn();
