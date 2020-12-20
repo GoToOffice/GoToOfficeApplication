@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'office.page.dart';
 import '../strings.dart';
+import '../model/office.model.dart';
+
 
 void main() {
   runApp(new MaterialApp(
@@ -76,10 +78,3 @@ class _OfficesListPageState extends State<OfficesListPage> {
   }
 }
 
- class Office {
-  String name;
-  String description;
-  String id;
-
-  Office({this.name, this.description, this.id});
-}

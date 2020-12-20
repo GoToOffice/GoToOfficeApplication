@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'seat.page.dart';
 import '../strings.dart';
+import '../model/seat.model.dart';
 
 void main(officeId) {
   runApp(new MaterialApp(
@@ -91,11 +92,4 @@ class _SeatsListPageState extends State<SeatsListPage> {
   }
 }
 
- class Seat {
-  String id;
-  String location;
-  String roomId;
-
-
-  Seat({this.location, this.roomId, this.id});
-}
+ 
