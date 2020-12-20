@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'repository.dart';
-import 'login_page.dart';
-import 'strings.dart';
+
+import 'screens/login.dart';
+import 'util/repository.dart';
+import 'util/strings.dart';
 
 void main() {
   runApp(GTOApp());

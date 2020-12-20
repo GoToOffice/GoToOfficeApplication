@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'repository.dart';
-import 'strings.dart';
+import 'package:go_to_office/screens/meetings.dart';
+
+import '../util/repository.dart';
+import '../util/strings.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title, this.repository}) : super(key: key);
@@ -18,7 +20,13 @@ class _LoginPageState extends State<LoginPage> {
   final Repository repository;
 
   void onUserLoggedIn() {
-    // TBC -> User navigation to Seat selection
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Meetings(
+            title: "Meetings",
+          )),
+    );
   }
 
   void onAdminLoggedIn() {
