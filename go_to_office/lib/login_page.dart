@@ -33,33 +33,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     void showSnack(String text) {
       final snackBar = SnackBar(content: Text(text));
-     // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      // TBC -> implement it by Oz
     }
 
     void onError(String text) {
       final snackBar =
           SnackBar(content: Text(text), backgroundColor: Colors.red);
     //  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-
-    void _onLoginRequest(BuildContext context, String pressedOption) {
-      if (pressedOption == Strings.loginUser) {
-        repository
-            .signIn(_userTextController.text, _passTextController.text)
-            .then((value) {
-          showSnack(value);
-        }, onError: (e) {
-          String text = "";
-          if (e is FirebaseAuthException) {
-            text = e.message;
-          } else {
-            text = e.toString();
-          }
-          onError(text);
-        });
-      };
+      // TBC -> implement it by Oz
       if (pressedOption == Strings.loginAdmin) {
-        Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => OfficesListPage()),
                     );
