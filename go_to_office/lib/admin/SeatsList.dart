@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'seat.page.dart';
-import '../strings.dart';
+import '../util/strings.dart';
 import '../model/seat.model.dart';
 
 void main(officeId) {

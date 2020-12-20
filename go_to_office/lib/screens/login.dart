@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_to_office/screens/meetings.dart';
 
 import '../util/repository.dart';
+import '../admin/officesList.dart';
 import '../util/strings.dart';
 
 class LoginPage extends StatefulWidget {
@@ -30,7 +31,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void onAdminLoggedIn() {
-    // TBC -> Admin navigation Admin console
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => OfficesListPage(),
+    ));
   }
 
   final _userTextController = TextEditingController();

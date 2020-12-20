@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'seat.page.dart';
 import 'seatsList.dart';
-import '../strings.dart';
+import '../util/strings.dart';
 
 void main(id) {
   runApp(new MaterialApp(
