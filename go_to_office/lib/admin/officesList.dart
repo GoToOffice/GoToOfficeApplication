@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'office.page.dart';
-import '../strings.dart';
+import '../util/strings.dart';
 import '../model/office.model.dart';
 
 

@@ -6,6 +6,8 @@ import 'strings.dart';
 abstract class Repository {
   Future initialize() async {}
 
+  Future<String> register(String email, String password) async {}
+
   Future<String> signIn(String email, String password) async {}
 
   Future<String> signOut() async {}
@@ -31,11 +33,19 @@ class FirebaseRepository implements Repository {
   }
 
   @override
-  Future<String> signIn(String _email, String _password) async {
+  Future<String> register(String _email, String _password) async {
     UserCredential userCredential = await _auth
         .createUserWithEmailAndPassword(email: _email, password: _password);
     return userCredential.user.uid;
   }
+
+  @override
+  Future<String> signIn(String _email, String _password) async {
+    UserCredential userCredential = await _auth
+        .signInWithEmailAndPassword(email: _email, password: _password);
+    return userCredential.user.uid;
+  }
+
 }
 
 class ErrorPage extends StatelessWidget {
