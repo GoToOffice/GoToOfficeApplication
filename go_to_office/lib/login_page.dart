@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'repository.dart';
 import 'strings.dart';
-import 'admin/officesList.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title, this.repository}) : super(key: key);
@@ -39,13 +38,24 @@ class _LoginPageState extends State<LoginPage> {
     void onError(String text) {
       final snackBar =
           SnackBar(content: Text(text), backgroundColor: Colors.red);
-    //  ScaffoldMessenger.of(context).showSnackBar(snackBar);
       // TBC -> implement it by Oz
-      if (pressedOption == Strings.loginAdmin) {
-                      context,
-                      MaterialPageRoute(builder: (context) => OfficesListPage()),
-                    );
+    }
 
+    void _onLoginRequest(BuildContext context, String pressedOption) {
+      if (pressedOption == Strings.loginUser) {
+        repository
+            .signIn(_userTextController.text, _passTextController.text)
+            .then((value) {
+          showSnack(value);
+        }, onError: (e) {
+          String text = "";
+          if (e is FirebaseAuthException) {
+            text = e.message;
+          } else {
+            text = e.toString();
+          }
+          onError(text);
+        });
       }
     }
 
