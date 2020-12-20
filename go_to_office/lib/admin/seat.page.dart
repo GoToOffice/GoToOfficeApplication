@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../model/seat.model.dart';
 
 void main(seatId, officeId) {
   runApp(new MaterialApp(
@@ -20,18 +21,19 @@ class SeatPage extends StatefulWidget {
 class _SeatPageState extends State<SeatPage> {
   final String seatId;
   final String officeId;
-  String roomId ;
-  String seatLocation ;
+   final Seat mySeat = new Seat({null, '1',  null}) ;
    _SeatPageState(this.seatId, this.officeId);
   @override
   Widget build(BuildContext context) {
+    if (this.seatId != null) {  // call API to get get office
+      getSeatApi(this.seatId);    
+    } 
     this.roomId = '1';
     if (this.seatId != null) {  // call API to get get office also get the office name
     this.seatLocation = 'Near a window';
-  } else {
-    this.seatLocation = '';
-  }
-
+    } else {
+      this.seatLocation = '';
+    }
     // Object officateAssreddress = {};
     return Scaffold(
         appBar: AppBar(
@@ -53,5 +55,21 @@ class _SeatPageState extends State<SeatPage> {
                     }),
               ],
             )));
+  }
+  CreaetUpdateSeat() {
+    if (this.myOffice.id != null) {  
+      this.UpdateSeatApi();
+    } else {
+      this.createSeatApi();
+    }
+  }
+UpdateSeateApi(){
+
+  }
+  createSeatApi(){
+
+  }
+  getSeatApi(id) {
+
   }
 }
