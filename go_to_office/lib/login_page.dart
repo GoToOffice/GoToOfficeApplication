@@ -17,12 +17,21 @@ class _LoginPageState extends State<LoginPage> {
   _LoginPageState(this.repository);
   final Repository repository;
 
+  void onUserLoggedIn() {
+    // TBC -> User navigation to Seat selection
+  }
+
+  void onAdminLoggedIn() {
+    // TBC -> Admin navigation Admin console
+  }
+
   final _userTextController = TextEditingController();
   final _passTextController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
+    // Cleans up the controller when the widget is disposed.
     _userTextController.dispose();
     _passTextController.dispose();
     super.dispose();
@@ -30,32 +39,80 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    void showSnack(String text) {
-      final snackBar = SnackBar(content: Text(text));
-      // TBC -> implement it by Oz
+
+    void _showSnack(String text) {
+      _scaffoldKey.currentState.showSnackBar( SnackBar(content: Text(text)) );
     }
 
-    void onError(String text) {
-      final snackBar =
-          SnackBar(content: Text(text), backgroundColor: Colors.red);
-      // TBC -> implement it by Oz
+    void _showError(String text) {
+      _scaffoldKey.currentState.showSnackBar( SnackBar(content: Text(text), backgroundColor: Colors.red) );
     }
 
-    void _onLoginRequest(BuildContext context, String pressedOption) {
-      if (pressedOption == Strings.loginUser) {
+    void _onError(Object error) {
+      String text = "";
+      if (error is FirebaseAuthException) {
+        text = error.message;
+      } else {
+        text = error.toString();
+      }
+      _showError(text);
+    }
+
+    bool _userCredentialsValidation(String _email, String _password) {
+
+      bool _validPassword = _password.isNotEmpty && _password.length > 5;
+      bool _validEmail = _email.isNotEmpty && RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_email);
+
+      if (!_validEmail) {
+        _onError(Strings.invalid_email);
+        return false;
+      }
+
+      if (!_validPassword) {
+        _onError(Strings.invalid_password);
+        return false;
+      }
+
+      return true;
+    }
+
+    void launchUser(String pressedOption, String uid) {
+
+      _showSnack("User had been successfully logged in" + uid);
+
+      if (pressedOption == Strings.loginUser)
+        onUserLoggedIn();
+      else
+        onAdminLoggedIn();
+
+    }
+
+    /// If the user is not registered, this method registers the user and then sign him in.
+    void _onLoginRequest(String pressedOption) {
+
+      String _email = _userTextController.text.toString();
+      String _password = _passTextController.text.toString();
+
+      if (_userCredentialsValidation(_email, _password)) {
         repository
-            .signIn(_userTextController.text, _passTextController.text)
+            .signIn(_email, _password)
             .then((value) {
-          showSnack(value);
-        }, onError: (e) {
-          String text = "";
-          if (e is FirebaseAuthException) {
-            text = e.message;
-          } else {
-            text = e.toString();
-          }
-          onError(text);
-        });
+          launchUser(pressedOption, value);
+
+        }, onError: (error) {
+
+          if (error is FirebaseAuthException && error.code == "user-not-found") {
+            repository
+                .register(_email, _password)
+                .then((value) {
+
+                  launchUser(pressedOption, value);
+
+                  }, onError: (error) {_onError(error);});
+
+            return;
+
+          }_onError(error);});
       }
     }
 
@@ -79,39 +136,25 @@ class _LoginPageState extends State<LoginPage> {
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
-    final userLoginButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xff01A0C7),
-      child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {
-          _onLoginRequest(context, Strings.loginUser);
-        },
-        child: Text(
-          Strings.loginUser,
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Theme.of(context).buttonColor),
-        ),
+    final userLoginButton = ElevatedButton(
+      onPressed: () {
+        _onLoginRequest(Strings.loginUser);
+      },
+      child: Text(
+        Strings.loginUser,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Theme.of(context).buttonColor),
       ),
     );
 
-    final adminLoginButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xff01A0C7),
-      child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {
-          _onLoginRequest(context, Strings.loginAdmin);
-        },
-        child: Text(
-          Strings.loginAdmin,
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Theme.of(context).buttonColor),
-        ),
+    final adminLoginButton = ElevatedButton(
+      onPressed: () {
+        _onLoginRequest(Strings.loginAdmin);
+      },
+      child: Text(
+        Strings.loginAdmin,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Theme.of(context).buttonColor),
       ),
     );
 
@@ -123,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
             child: const Text(Strings.sign_out_button),
             textColor: Theme.of(context).buttonColor,
             onPressed: () {
-              repository.signOut().then((value) => {showSnack(value)});
+              repository.signOut().then((value) => { _showSnack(value) });
             },
           );
         })
@@ -132,6 +175,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
         appBar: appBar,
+        key: _scaffoldKey,
         body: SingleChildScrollView(
           child: Center(
             child: Container(
@@ -142,6 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+
                     SizedBox(
                       height: 200.0,
                       child: Image.asset(
@@ -149,18 +194,27 @@ class _LoginPageState extends State<LoginPage> {
                         fit: BoxFit.contain,
                       ),
                     ),
+
                     SizedBox(height: 45.0),
+
                     emailField,
+
                     SizedBox(height: 45.0),
+
                     passwordField,
+
                     SizedBox(
                       height: 35.0,
                     ),
+
                     userLoginButton,
+
                     SizedBox(
                       height: 15.0,
                     ),
+
                     adminLoginButton,
+
                     SizedBox(
                       height: 15.0,
                     ),
@@ -169,6 +223,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-        ));
+        )
+    );
   }
 }

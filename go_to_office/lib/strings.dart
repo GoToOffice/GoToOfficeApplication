@@ -8,4 +8,6 @@ class Strings{
   static const loginAdmin= "Login as Admin";
   static const Email_hint= "Email";
   static const password_hint= "Password";
+  static const invalid_email= "Email is invalid";
+  static const invalid_password= "Password is invalid, should be at least 6 characters";
 }
