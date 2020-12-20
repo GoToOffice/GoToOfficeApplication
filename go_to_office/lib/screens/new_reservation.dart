@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:go_to_office/model/Reservation.dart';
+import 'package:go_to_office/model/reservation.dart';
 import 'package:simple_time_range_picker/simple_time_range_picker.dart';
 
 class ResourceSelection extends StatefulWidget {

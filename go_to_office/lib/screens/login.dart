@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_to_office/screens/meetings.dart';
+import 'package:go_to_office/screens/reservations.dart';
 
 import '../util/repository.dart';
-import '../admin/officesList.dart';
 import '../util/strings.dart';
+import 'admin/offices_list.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title, this.repository}) : super(key: key);
@@ -25,16 +25,17 @@ class _LoginPageState extends State<LoginPage> {
       context,
       MaterialPageRoute(
           builder: (context) => Meetings(
-            title: "Meetings",
-          )),
+                title: "Meetings",
+              )),
     );
   }
 
   void onAdminLoggedIn() {
     Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => OfficesListPage(),
-    ));
+        context,
+        MaterialPageRoute(
+          builder: (context) => OfficesListPage(),
+        ));
   }
 
   final _userTextController = TextEditingController();
@@ -51,13 +52,13 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-
     void _showSnack(String text) {
-      _scaffoldKey.currentState.showSnackBar( SnackBar(content: Text(text)) );
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(text)));
     }
 
     void _showError(String text) {
-      _scaffoldKey.currentState.showSnackBar( SnackBar(content: Text(text), backgroundColor: Colors.red) );
+      _scaffoldKey.currentState.showSnackBar(
+          SnackBar(content: Text(text), backgroundColor: Colors.red));
     }
 
     void _onError(Object error) {
@@ -71,9 +72,11 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     bool _userCredentialsValidation(String _email, String _password) {
-
-      bool _validPassword = _password?.isNotEmpty == true && _password.length > 5;
-      bool _validEmail = _email?.isNotEmpty == true && RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_email);
+      bool _validPassword =
+          _password?.isNotEmpty == true && _password.length > 5;
+      bool _validEmail = _email?.isNotEmpty == true &&
+          RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+              .hasMatch(_email);
 
       if (!_validEmail) {
         _onError(Strings.invalid_email);
@@ -89,42 +92,35 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     void _dispatchLogin(String pressedOption, String uid) {
-
       // /*uncomment to present a snack*/ _showSnack("User had been successfully logged in" + uid);
 
       if (pressedOption == Strings.loginUser)
         onUserLoggedIn();
       else
         onAdminLoggedIn();
-
     }
 
     /// If the user is not registered, this method registers the user and then sign him in.
     void _onLoginRequest(String pressedOption) {
-
       String _email = _userTextController.text?.toString();
       String _password = _passTextController.text?.toString();
 
       if (_userCredentialsValidation(_email, _password)) {
-        repository
-            .signIn(_email, _password)
-            .then((value) {
+        repository.signIn(_email, _password).then((value) {
           _dispatchLogin(pressedOption, value);
-
         }, onError: (error) {
-
-          if (error is FirebaseAuthException && error.code == "user-not-found") {
-            repository
-                .register(_email, _password)
-                .then((value) {
-
+          if (error is FirebaseAuthException &&
+              error.code == "user-not-found") {
+            repository.register(_email, _password).then((value) {
               _dispatchLogin(pressedOption, value);
-
-              }, onError: (error) {_onError(error);});
+            }, onError: (error) {
+              _onError(error);
+            });
 
             return;
-
-          }_onError(error);});
+          }
+          _onError(error);
+        });
       }
     }
 
@@ -178,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
             child: const Text(Strings.sign_out_button),
             textColor: Theme.of(context).buttonColor,
             onPressed: () {
-              repository.signOut().then((value) => { _showSnack(value) });
+              repository.signOut().then((value) => {_showSnack(value)});
             },
           );
         })
@@ -198,7 +194,6 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-
                     SizedBox(
                       height: 200.0,
                       child: Image.asset(
@@ -206,27 +201,18 @@ class _LoginPageState extends State<LoginPage> {
                         fit: BoxFit.contain,
                       ),
                     ),
-
                     SizedBox(height: 45.0),
-
                     emailField,
-
                     SizedBox(height: 45.0),
-
                     passwordField,
-
                     SizedBox(
                       height: 35.0,
                     ),
-
                     userLoginButton,
-
                     SizedBox(
                       height: 15.0,
                     ),
-
                     adminLoginButton,
-
                     SizedBox(
                       height: 15.0,
                     ),
@@ -235,7 +221,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-        )
-    );
+        ));
   }
 }

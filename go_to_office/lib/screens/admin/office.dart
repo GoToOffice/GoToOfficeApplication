@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'seat.page.dart';
-import 'seatsList.dart';
-import '../util/strings.dart';
 
-void main(id) {
-  runApp(new MaterialApp(
-    title: Strings.office_manager,
-    home: new OfficePage(id),
-  ));
-}
+import '../../util/strings.dart';
+import 'seat.dart';
+import 'seats_list.dart';
 
 class OfficePage extends StatefulWidget {
   OfficePage(this.id);
@@ -21,20 +15,21 @@ class OfficePage extends StatefulWidget {
 class _OfficePageState extends State<OfficePage> {
   final String id;
   String officeName;
-  String officeCoutnry ;
+  String officeCoutnry;
   String officeDescription;
-   _OfficePageState(this.id);
+  _OfficePageState(this.id);
   @override
   Widget build(BuildContext context) {
-  if (this.id != null) {  // call API to get get office
-    this.officeName = 'Herzeliya';
-    this.officeCoutnry = 'Israel';
-    this.officeDescription = 'Office description';
-  } else {
-    this.officeName = '';
-    this.officeCoutnry = '';
-    this.officeDescription = '';
-  }
+    if (this.id != null) {
+      // call API to get get office
+      this.officeName = 'Herzeliya';
+      this.officeCoutnry = 'Israel';
+      this.officeDescription = 'Office description';
+    } else {
+      this.officeName = '';
+      this.officeCoutnry = '';
+      this.officeDescription = '';
+    }
 
     // Object officateAssreddress = {};
     return Scaffold(
@@ -47,7 +42,7 @@ class _OfficePageState extends State<OfficePage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  initialValue: this.officeName,
+                    initialValue: this.officeName,
                     decoration:
                         InputDecoration(hintText: Strings.insert_office_name),
                     onChanged: (String inputString) {
@@ -56,16 +51,16 @@ class _OfficePageState extends State<OfficePage> {
                       });
                     }),
                 TextFormField(
-                  initialValue: this.officeCoutnry,
-                    decoration:
-                        InputDecoration(hintText: Strings.insert_office_country),
+                    initialValue: this.officeCoutnry,
+                    decoration: InputDecoration(
+                        hintText: Strings.insert_office_country),
                     onChanged: (String inputString) {
                       setState(() {
                         officeCoutnry = inputString;
                       });
                     }),
                 TextFormField(
-                  initialValue: this.officeDescription,
+                    initialValue: this.officeDescription,
                     decoration: InputDecoration(
                         hintText: Strings.insert_office_description),
                     onChanged: (String inputString) {
@@ -73,24 +68,26 @@ class _OfficePageState extends State<OfficePage> {
                         officeDescription = inputString;
                       });
                     }),
-                    ElevatedButton(
-                      child: Text(Strings.add_new_seat),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SeatPage(null, this.id)),
-                        );
-                      },
-                    ),
-                    ElevatedButton(
-                      child: Text(Strings.view_list_seats),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SeatsListPage(this.id)),
-                        );
-                      },
-                    ),
+                ElevatedButton(
+                  child: Text(Strings.add_new_seat),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SeatPage(null, this.id)),
+                    );
+                  },
+                ),
+                ElevatedButton(
+                  child: Text(Strings.view_list_seats),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SeatsListPage(this.id)),
+                    );
+                  },
+                ),
               ],
             )));
   }
