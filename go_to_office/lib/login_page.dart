@@ -32,13 +32,13 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     void showSnack(String text) {
       final snackBar = SnackBar(content: Text(text));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     void onError(String text) {
       final snackBar =
           SnackBar(content: Text(text), backgroundColor: Colors.red);
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     void _onLoginRequest(BuildContext context, String pressedOption) {
