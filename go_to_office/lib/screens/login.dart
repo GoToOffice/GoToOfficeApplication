@@ -72,8 +72,8 @@ class _LoginPageState extends State<LoginPage> {
 
     bool _userCredentialsValidation(String _email, String _password) {
 
-      bool _validPassword = _password.isNotEmpty && _password.length > 5;
-      bool _validEmail = _email.isNotEmpty && RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_email);
+      bool _validPassword = _password?.isNotEmpty == true && _password.length > 5;
+      bool _validEmail = _email?.isNotEmpty == true && RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(_email);
 
       if (!_validEmail) {
         _onError(Strings.invalid_email);
@@ -102,8 +102,8 @@ class _LoginPageState extends State<LoginPage> {
     /// If the user is not registered, this method registers the user and then sign him in.
     void _onLoginRequest(String pressedOption) {
 
-      String _email = _userTextController.text.toString();
-      String _password = _passTextController.text.toString();
+      String _email = _userTextController.text?.toString();
+      String _password = _passTextController.text?.toString();
 
       if (_userCredentialsValidation(_email, _password)) {
         repository
