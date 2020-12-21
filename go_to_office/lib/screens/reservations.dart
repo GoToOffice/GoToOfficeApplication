@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_to_office/screens/resource_selection.dart';
+import 'package:go_to_office/screens/new_reservation.dart';
 
 class Meetings extends StatefulWidget {
   Meetings({Key key, this.title}) : super(key: key);
