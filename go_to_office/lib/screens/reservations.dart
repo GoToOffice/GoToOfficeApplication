@@ -31,7 +31,7 @@ class _MeetingsState extends State<Meetings> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ResourceSelection(
+                    builder: (context) => NewReservation(
                           title: "Book a Seat",
                         )),
               );

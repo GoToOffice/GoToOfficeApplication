@@ -1,14 +1,16 @@
 class Reservation {
+  String officeId;
+  String seatId;
   String date;
   String startTime;
   String endTime;
-  String seatName;
   bool syncWithCalendar;
 
   Reservation(
-      {this.date,
+      {this.officeId,
+      this.seatId,
+      this.date,
       this.startTime,
       this.endTime,
-      this.seatName,
       this.syncWithCalendar});
 }

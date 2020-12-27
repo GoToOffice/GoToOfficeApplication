@@ -5,22 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:go_to_office/model/reservation.dart';
 import 'package:simple_time_range_picker/simple_time_range_picker.dart';
 
-class ResourceSelection extends StatefulWidget {
-  ResourceSelection({Key key, this.title}) : super(key: key);
+class NewReservation extends StatefulWidget {
+  NewReservation({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _ResourceSelectionState createState() => _ResourceSelectionState();
+  _NewReservationState createState() => _NewReservationState();
 }
 
-class _ResourceSelectionState extends State<ResourceSelection> {
+class _NewReservationState extends State<NewReservation> {
   final _formKey = GlobalKey<FormState>();
   final databaseReference = FirebaseDatabase.instance.reference();
 
-  DateTime selectedDate = DateTime.now();
-  List<String> _locations = []; // Option 2
-  String _selectedLocation; // Option 2
+  DateTime _selectedDate = DateTime.now();
+  List<String> _offices = [];
+  String _selectedOffice;
+
+  List<String> _seats = [];
+  String _selectedSeat;
+
   bool isDisabled = true;
   TimeOfDay _startTime = TimeOfDay.now();
   TimeOfDay _endTime = TimeOfDay.now().add(hour: 1);
@@ -29,45 +33,50 @@ class _ResourceSelectionState extends State<ResourceSelection> {
   @override
   void initState() {
     super.initState();
-    _setupLocations();
-    readData();
+    updateOffices();
     reservation = Reservation(
-        date: selectedDate.toString(),
+        officeId: _selectedOffice,
+        seatId: _selectedSeat,
+        date: _selectedDate.toString(),
         startTime: _startTime.toString(),
         endTime: _endTime.toString(),
-        seatName: _selectedLocation,
         syncWithCalendar: isDisabled);
   }
 
-  void _setupLocations() async {
-    // List<String> locations = await DatabaseService.getNeeds();
-    List<String> locations = [
-      'HotSeat1',
-      'HotSeat2',
-      'HotSeat3',
-      'HotSeat4'
-    ]; // Option 2
+  void updateOffices() async {
+    // List<Office> offices = await APIHandler.getOffices();
+    // databaseReference.once().then((DataSnapshot snapshot) {
+    //   print('Data : ${snapshot.value}');
+    // });
+
+    List<String> offices = ['Office1', 'Office2', 'Office3']; // Option 2
     setState(() {
-      _locations = locations;
+      _offices = offices;
+      _selectedOffice = _offices[0];
     });
+
+    updateSeats(_selectedOffice);
   }
 
-  void readData() {
-    databaseReference.once().then((DataSnapshot snapshot) {
-      print('Data : ${snapshot.value}');
+  List<String> updateSeats(String officeId) {
+    // List<Seat> seats = await APIHandler.getSeats(officeId);
+    List<String> seats = ['HotSeat1', 'HotSeat2', 'HotSeat3', 'HotSeat4'];
+    setState(() {
+      _seats = seats;
     });
+    return seats;
   }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
+        initialDate: _selectedDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != _selectedDate)
       setState(() {
-        selectedDate = picked;
-        reservation.date = selectedDate as String;
+        _selectedDate = picked;
+        reservation.date = _selectedDate as String;
       });
   }
 
@@ -103,6 +112,91 @@ class _ResourceSelectionState extends State<ResourceSelection> {
 
   @override
   Widget build(BuildContext context) {
+    final officesDropDownButton = DropdownButton(
+      hint: Text(_selectedOffice),
+      value: _selectedOffice,
+      onChanged: (newValue) {
+        setState(() {
+          _selectedOffice = newValue;
+          reservation.officeId = _selectedOffice;
+          _seats = updateSeats(_selectedOffice);
+        });
+      },
+      items: _offices.map((location) {
+        return DropdownMenuItem(
+          child: new Text(location),
+          value: location,
+        );
+      }).toList(),
+    );
+
+    final datePickerButton = RaisedButton(
+      onPressed: () => _selectDate(context),
+      child: Text("${_selectedDate.toLocal()}".split(' ')[0]),
+    );
+
+    final startTimeRangePickerButton = RaisedButton(
+      child: Text(_timeFormated(_startTime)),
+      onPressed: () => TimeRangePicker.show(
+        context: context,
+        startTime: _startTime,
+        endTime: _endTime,
+        timeRangeViewType: TimeRangeViewType.start,
+        onSubmitted: (TimeRangeValue value) {
+          setState(() {
+            _startTime = value.startTime;
+            reservation.startTime = _startTime as String;
+            _endTime = value.endTime;
+            reservation.endTime = _endTime as String;
+          });
+        },
+      ),
+    );
+
+    final endTimeRangePickerButton = RaisedButton(
+      child: Text(_timeFormated(_endTime)),
+      onPressed: () => TimeRangePicker.show(
+        timeRangeViewType: TimeRangeViewType.end,
+        context: context,
+        startTime: _startTime,
+        endTime: _endTime,
+        onSubmitted: (TimeRangeValue value) {
+          setState(() {
+            _startTime = value.startTime;
+            reservation.startTime = _startTime as String;
+            _endTime = value.endTime;
+            reservation.endTime = _endTime as String;
+          });
+        },
+      ),
+    );
+
+    final seatsDropDownPicker = DropdownButton(
+      hint: Text(_seats[0]),
+      value: _selectedSeat,
+      onChanged: (newValue) {
+        setState(() {
+          _selectedSeat = newValue;
+          reservation.seatId = _selectedSeat;
+        });
+      },
+      items: _seats.map((location) {
+        return DropdownMenuItem(
+          child: new Text(location),
+          value: location,
+        );
+      }).toList(),
+    );
+
+    final syncWithCalendarSwitchButton = Switch(
+        value: isDisabled,
+        onChanged: (check) {
+          setState(() {
+            isDisabled = check;
+            reservation.syncWithCalendar = isDisabled;
+          });
+        });
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -117,12 +211,17 @@ class _ResourceSelectionState extends State<ResourceSelection> {
             children: <Widget>[
               Row(
                 children: [
+                  Text("Office"),
+                  SizedBox(width: 100),
+                  officesDropDownButton,
+                ],
+              ),
+              Divider(color: Colors.black),
+              Row(
+                children: [
                   Text("Date"),
-                  SizedBox(width: 100), // give it width
-                  RaisedButton(
-                    onPressed: () => _selectDate(context),
-                    child: Text("${selectedDate.toLocal()}".split(' ')[0]),
-                  ),
+                  SizedBox(width: 100),
+                  datePickerButton,
                 ],
               ),
               Divider(
@@ -133,80 +232,26 @@ class _ResourceSelectionState extends State<ResourceSelection> {
               Row(
                 children: [
                   Text("Time"),
-                  SizedBox(width: 100), // give it width
-                  RaisedButton(
-                    child: Text(_timeFormated(_startTime)),
-                    onPressed: () => TimeRangePicker.show(
-                      context: context,
-                      startTime: _startTime,
-                      endTime: _endTime,
-                      timeRangeViewType: TimeRangeViewType.start,
-                      onSubmitted: (TimeRangeValue value) {
-                        setState(() {
-                          _startTime = value.startTime;
-                          reservation.startTime = _startTime as String;
-                          _endTime = value.endTime;
-                          reservation.endTime = _endTime as String;
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 20), // give it width
-                  RaisedButton(
-                    child: Text(_timeFormated(_endTime)),
-                    onPressed: () => TimeRangePicker.show(
-                      timeRangeViewType: TimeRangeViewType.end,
-                      context: context,
-                      startTime: _startTime,
-                      endTime: _endTime,
-                      onSubmitted: (TimeRangeValue value) {
-                        setState(() {
-                          _startTime = value.startTime;
-                          reservation.startTime = _startTime as String;
-                          _endTime = value.endTime;
-                          reservation.endTime = _endTime as String;
-                        });
-                      },
-                    ),
-                  ),
+                  SizedBox(width: 100),
+                  startTimeRangePickerButton,
+                  SizedBox(width: 20),
+                  endTimeRangePickerButton,
                 ],
               ),
               Divider(color: Colors.black),
               Row(
                 children: [
-                  Text("Room"),
-                  SizedBox(width: 100), // give it width
-                  DropdownButton(
-                    hint: Text(_locations[0]), // Not necessary for Option 1
-                    value: _selectedLocation,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _selectedLocation = newValue;
-                        reservation.seatName = _selectedLocation;
-                      });
-                    },
-                    items: _locations.map((location) {
-                      return DropdownMenuItem(
-                        child: new Text(location),
-                        value: location,
-                      );
-                    }).toList(),
-                  ),
+                  Text("Seat"),
+                  SizedBox(width: 100),
+                  seatsDropDownPicker,
                 ],
               ),
               Divider(color: Colors.black),
               Row(
                 children: [
                   Text("Sync with calendar"),
-                  SizedBox(width: 100), // give it width
-                  Switch(
-                      value: isDisabled,
-                      onChanged: (check) {
-                        setState(() {
-                          isDisabled = check;
-                          reservation.syncWithCalendar = isDisabled;
-                        });
-                      }),
+                  SizedBox(width: 100),
+                  syncWithCalendarSwitchButton,
                 ],
               ),
               Expanded(
