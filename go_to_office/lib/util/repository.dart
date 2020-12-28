@@ -4,6 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'strings.dart';
 
 abstract class Repository {
+
+  Stream<dynamic> getAuthChangesStream();
+
   Future initialize() async {}
 
   Future<String> register(String email, String password) async {}
@@ -20,6 +23,12 @@ class FirebaseRepository implements Repository {
   Future initialize() async {
     await Firebase.initializeApp();
     _auth = FirebaseAuth.instance;
+    FirebaseAuth.instance.authStateChanges();
+  }
+
+  @override
+  Stream getAuthChangesStream() {
+    return _auth.authStateChanges();
   }
 
   @override

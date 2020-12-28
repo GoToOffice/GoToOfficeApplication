@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_to_office/util/customwidgets/nav_drawer.dart';
 
 import 'screens/login.dart';
 import 'util/repository.dart';
@@ -31,7 +32,11 @@ class GTOApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: LoginPage(title: Strings.app_name, repository: firebaseAuth),
+            home: Scaffold(
+              appBar: AppBar(title : Text(Strings.app_name)),
+              drawer: NavDrawer(title : "Nav", repository: firebaseAuth),
+              body: LoginPage(title: Strings.app_name, repository: firebaseAuth),
+            )
           );
         }
 

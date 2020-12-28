@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final appBar = AppBar(
+   /* final appBar = AppBar(
       title: Text(widget.title),
       actions: <Widget>[
         Builder(builder: (BuildContext context) {
@@ -179,10 +179,9 @@ class _LoginPageState extends State<LoginPage> {
           );
         })
       ],
-    );
+    );*/
 
     return Scaffold(
-        appBar: appBar,
         key: _scaffoldKey,
         body: SingleChildScrollView(
           child: Center(
