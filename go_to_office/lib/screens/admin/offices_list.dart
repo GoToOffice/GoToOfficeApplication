@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_to_office/util/customwidgets/nav_drawer.dart';
+import 'package:go_to_office/util/repository.dart';
 
 import '../../model/office.dart';
 import '../../util/strings.dart';
@@ -11,17 +13,33 @@ final List<Office> officesList = [
 ];
 
 class OfficesListPage extends StatefulWidget {
+  OfficesListPage({Key key, this.title, this.repository, this.adminName}) : super(key: key);
+
+  final String title;
+  final Repository repository;
+  final String adminName;
+
   @override
-  State<StatefulWidget> createState() => _OfficesListPageState();
+  State<StatefulWidget> createState() => _OfficesListPageState(repository, adminName);
 }
 
 class _OfficesListPageState extends State<OfficesListPage> {
+  _OfficesListPageState(this.repository, this.adminName);
+
+  final Repository repository;
+  final String adminName;
+
   @override
   Widget build(BuildContext context) {
     // Object officateAssreddress = {};
     return Scaffold(
-        appBar: AppBar(
-          title: Text(Strings.offices),
+        appBar: AppBar(title: Text(widget.title)),
+        drawer: NavDrawer(userType: Strings.loginAdmin, title: adminName,
+          callback: (String pressed) => {
+            if (pressed == Strings.sign_out_button) {
+              repository.signOut().then((value) => Navigator.pop(context))
+            }
+          } ,
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(15.0),

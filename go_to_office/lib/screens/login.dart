@@ -20,22 +20,30 @@ class _LoginPageState extends State<LoginPage> {
   _LoginPageState(this.repository);
   final Repository repository;
 
-  void onUserLoggedIn() {
+  void onUserLoggedIn(String uid) {
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => Meetings(
-                title: "Meetings",
-              )),
+                title: Strings.Meetings,
+                repository: repository,
+                userName: uid
+              )
+      ),
     );
   }
 
-  void onAdminLoggedIn() {
+  void onAdminLoggedIn(String uid) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => OfficesListPage(),
-        ));
+          builder: (context) => OfficesListPage(
+              title: Strings.offices,
+              repository: repository,
+              adminName: uid
+          ),
+        )
+    );
   }
 
   final _userTextController = TextEditingController();
@@ -95,9 +103,9 @@ class _LoginPageState extends State<LoginPage> {
       // /*uncomment to present a snack*/ _showSnack("User had been successfully logged in" + uid);
 
       if (pressedOption == Strings.loginUser)
-        onUserLoggedIn();
+        onUserLoggedIn(uid);
       else
-        onAdminLoggedIn();
+        onAdminLoggedIn(uid);
     }
 
     /// If the user is not registered, this method registers the user and then sign him in.
@@ -107,12 +115,12 @@ class _LoginPageState extends State<LoginPage> {
 
       if (_userCredentialsValidation(_email, _password)) {
         repository.signIn(_email, _password).then((value) {
-          _dispatchLogin(pressedOption, value);
+          _dispatchLogin(pressedOption, _email);
         }, onError: (error) {
           if (error is FirebaseAuthException &&
               error.code == "user-not-found") {
             repository.register(_email, _password).then((value) {
-              _dispatchLogin(pressedOption, value);
+              _dispatchLogin(pressedOption, _email);
             }, onError: (error) {
               _onError(error);
             });
@@ -145,41 +153,50 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final userLoginButton = ElevatedButton(
-      onPressed: () {
-        _onLoginRequest(Strings.loginUser);
-      },
-      child: Text(
-        Strings.loginUser,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Theme.of(context).buttonColor),
-      ),
+        onPressed: () {
+          _onLoginRequest(Strings.loginUser);
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 5.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Icon(Icons.login),
+              ),
+              Text(Strings.loginUser,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Theme.of(context).buttonColor),
+              )
+            ],
+          ),
+        )
     );
 
     final adminLoginButton = ElevatedButton(
       onPressed: () {
         _onLoginRequest(Strings.loginAdmin);
       },
-      child: Text(
-        Strings.loginAdmin,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Theme.of(context).buttonColor),
-      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 5.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Icon(Icons.login),
+              ),
+              Text(Strings.loginAdmin,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Theme.of(context).buttonColor),
+              )
+            ],
+        ),
+      )
     );
-
-   /* final appBar = AppBar(
-      title: Text(widget.title),
-      actions: <Widget>[
-        Builder(builder: (BuildContext context) {
-          return FlatButton(
-            child: const Text(Strings.sign_out_button),
-            textColor: Theme.of(context).buttonColor,
-            onPressed: () {
-              repository.signOut().then((value) => {_showSnack(value)});
-            },
-          );
-        })
-      ],
-    );*/
 
     return Scaffold(
         key: _scaffoldKey,

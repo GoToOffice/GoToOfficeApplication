@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:go_to_office/screens/new_reservation.dart';
+import 'package:go_to_office/util/customwidgets/nav_drawer.dart';
+import 'package:go_to_office/util/repository.dart';
+import '../util/strings.dart';
 
 class Meetings extends StatefulWidget {
-  Meetings({Key key, this.title}) : super(key: key);
+  Meetings({Key key, this.title, this.repository, this.userName}) : super(key: key);
 
   final String title;
+  final Repository repository;
+  final String userName;
 
   @override
-  _MeetingsState createState() => _MeetingsState();
+  _MeetingsState createState() => _MeetingsState(repository, userName);
 }
 
 class _MeetingsState extends State<Meetings> {
+  _MeetingsState(this.repository, this.userName);
+
+  final Repository repository;
+  final String userName;
+
   @override
   void initState() {
     super.initState();
@@ -19,8 +29,14 @@ class _MeetingsState extends State<Meetings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+
+      appBar: AppBar(title: Text(widget.title)),
+      drawer: NavDrawer(userType: Strings.loginUser, title: userName,
+          callback: (String pressed) => {
+            if (pressed == Strings.sign_out_button) {
+              repository.signOut().then((value) => Navigator.pop(context))
+            }
+          } ,
       ),
       body: Container(
         padding: EdgeInsets.only(left: 10.0),

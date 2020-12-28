@@ -1,6 +1,7 @@
 class Strings{
   static const welcomeMessage = "Welcome To Flutter";
   static const app_name = "Go To Office";
+  static const drawer_title = "Choose your action";
   static const sign_out_button= "Sign out";
   static const sign_out_failed= "No user logged in";
   static const sign_out_success= "Signed out successfully";
@@ -18,5 +19,6 @@ class Strings{
   static const insert_office_description = "Please insert Office Description";
   static const view_list_seats = "View List of Seats";
   static const offices = "Offices";
+  static const Meetings = "Meetings";
   static const seats = "Seats";
 }

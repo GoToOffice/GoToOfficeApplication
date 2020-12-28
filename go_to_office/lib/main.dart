@@ -34,7 +34,6 @@ class GTOApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             home: Scaffold(
               appBar: AppBar(title : Text(Strings.app_name)),
-              drawer: NavDrawer(title : "Nav", repository: firebaseAuth),
               body: LoginPage(title: Strings.app_name, repository: firebaseAuth),
             )
           );
