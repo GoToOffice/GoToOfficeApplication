@@ -31,13 +31,7 @@ class _MeetingsState extends State<Meetings> {
     return Scaffold(
 
       appBar: AppBar(title: Text(widget.title)),
-      drawer: NavDrawer(userType: Strings.loginUser, title: userName,
-          callback: (String pressed) => {
-            if (pressed == Strings.sign_out_button) {
-              repository.signOut().then((value) => Navigator.pop(context))
-            }
-          } ,
-      ),
+      drawer: NavDrawer(userType: Strings.loginUser, title: userName, repository: repository),
       body: Container(
         padding: EdgeInsets.only(left: 10.0),
         margin: EdgeInsets.only(top: 30.0, bottom: 20.0),

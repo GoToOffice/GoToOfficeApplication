@@ -34,13 +34,7 @@ class _OfficesListPageState extends State<OfficesListPage> {
     // Object officateAssreddress = {};
     return Scaffold(
         appBar: AppBar(title: Text(widget.title)),
-        drawer: NavDrawer(userType: Strings.loginAdmin, title: adminName,
-          callback: (String pressed) => {
-            if (pressed == Strings.sign_out_button) {
-              repository.signOut().then((value) => Navigator.pop(context))
-            }
-          } ,
-        ),
+        drawer: NavDrawer(userType: Strings.loginAdmin, title: adminName, repository: repository),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(15.0),
           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[

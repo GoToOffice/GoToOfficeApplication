@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:go_to_office/util/repository.dart';
 import 'package:go_to_office/util/strings.dart';
 
+/// An independent Navigation Drawer to take place at the two main pages
 class NavDrawer extends StatefulWidget {
-  NavDrawer({Key key, this.userType, this.title, this.callback}) : super(key: key);
+  NavDrawer({Key key, this.userType, this.title, this.repository}) : super(key: key);
 
   final String title;
   final String userType;
-  final Function callback;
+  final Repository repository;
 
   @override
-  _NavDrawerState createState() => _NavDrawerState(userType, callback);
+  _NavDrawerState createState() => _NavDrawerState(userType, repository);
 }
 
 class _NavDrawerState extends State<NavDrawer> {
-  _NavDrawerState(this.userType, this.callback);
+  _NavDrawerState(this.userType, this.repository);
 
-  final Function callback;
+  // We need the Repository here, in order to enable this widget to be independent.
+  final Repository repository;
   final String userType;
 
   String getImageAsset() {
@@ -26,37 +29,38 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                  decoration: BoxDecoration(color: Colors.blue,),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset(getImageAsset(), width: 80, height: 80,),
-                      SizedBox(height: 15,),
-                      Text(widget.title,
-                        style: TextStyle(color: Colors.white),)
-                    ],
-                  )
-              ),
-              ListTile(
-                title: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: Text(Strings.sign_out_button),
-                    )
-                  ],
+        child: Stack(
+          children: <Widget>[
+            ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  DrawerHeader(
+                      decoration: BoxDecoration(color: Colors.blue,),
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset(getImageAsset(), width: 80, height: 80,),
+                          SizedBox(height: 15,),
+                          Text(widget.title,
+                            style: TextStyle(color: Colors.white, fontSize: 18),)
+                        ],
+                      )
+            ), Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                width: double.infinity,
+                child: FlatButton(
+                  child: Text(Strings.sign_out_button, style: TextStyle(fontSize: 16)),
+                  onPressed: () => {
+                    Navigator.pop(context),
+                    repository.signOut().then((value) => Navigator.pop(context))
+                  },
+                  color: Colors.blue,
+                  textColor: Colors.white,
                 ),
-                onTap: () {
-                  Navigator.pop(context);
-                  callback(Strings.sign_out_button);
-                },
-              )
-            ]
+              ),
+            ),
+          ],
         )
     );
   }
