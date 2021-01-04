@@ -20,27 +20,27 @@ class _LoginPageState extends State<LoginPage> {
   _LoginPageState(this.repository);
   final Repository repository;
 
-  void onUserLoggedIn(String uid) {
+  void onUserLoggedIn(String email) {
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => Meetings(
                 title: Strings.Meetings,
                 repository: repository,
-                userName: uid
+                userName: email
               )
       ),
     );
   }
 
-  void onAdminLoggedIn(String uid) {
+  void onAdminLoggedIn(String email) {
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => OfficesListPage(
               title: Strings.offices,
               repository: repository,
-              adminName: uid
+              adminName: email
           ),
         )
     );
@@ -199,44 +199,44 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     return Scaffold(
-        key: _scaffoldKey,
-        body: SingleChildScrollView(
-          child: Center(
-            child: Container(
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(36.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 200.0,
-                      child: Image.asset(
-                        "assets/logo.png",
-                        fit: BoxFit.contain,
-                      ),
+      key: _scaffoldKey,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(36.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 200.0,
+                    child: Image.asset(
+                      "assets/logo.png",
+                      fit: BoxFit.contain,
                     ),
-                    SizedBox(height: 45.0),
-                    emailField,
-                    SizedBox(height: 45.0),
-                    passwordField,
-                    SizedBox(
-                      height: 35.0,
-                    ),
-                    userLoginButton,
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    adminLoginButton,
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 45.0),
+                  emailField,
+                  SizedBox(height: 45.0),
+                  passwordField,
+                  SizedBox(
+                    height: 35.0,
+                  ),
+                  userLoginButton,
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  adminLoginButton,
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                ],
               ),
             ),
           ),
-        ));
+        ),
+      ));
   }
 }

@@ -20,5 +20,6 @@ class Strings{
   static const view_list_seats = "View List of Seats";
   static const offices = "Offices";
   static const Meetings = "Meetings";
+  static const UserProfile = "My Profile";
   static const seats = "Seats";
 }

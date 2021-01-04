@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_to_office/screens/user_profile/take_a_pic.dart';
 import 'package:go_to_office/util/repository.dart';
 import 'package:go_to_office/util/strings.dart';
 
@@ -44,6 +45,31 @@ class _NavDrawerState extends State<NavDrawer> {
                             style: TextStyle(color: Colors.white, fontSize: 18),)
                         ],
                       )
+                  ),
+                  ListTile(
+                    title: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Image.asset('assets/user_profile_b_24.png'),
+                          FlatButton(
+                            child: Text(Strings.UserProfile, style: TextStyle(color: Colors.blue, fontSize: 16)),
+                            onPressed: () => {
+                              Navigator.pop(context),
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TakeAPic()
+                            )
+                            )
+                            }
+                          ),
+                        ],
+                      )
+                    )
+                  )
+                ]
             ), Align(
               alignment: Alignment.bottomCenter,
               child: Container(
