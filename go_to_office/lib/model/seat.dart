@@ -4,5 +4,5 @@ class Seat {
   String roomId;
 
 
-  Seat({this.location, this.roomId, this.id});
+  Seat({this.id, this.location, this.roomId});
 }

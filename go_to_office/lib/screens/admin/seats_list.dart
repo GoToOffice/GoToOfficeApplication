@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-
-import '../../model/seat.dart';
-import '../../util/strings.dart';
 import 'seat.dart';
+import '../../util/strings.dart';
+import '../../model/seat.dart';
+
+void main(officeId) {
+  runApp(new MaterialApp(
+    title: Strings.seats,
+    home: new SeatsListPage(officeId),
+  ));
+}
 
 final List<Seat> SeatsList = [
   Seat(location: 'Herzeliya', id: '1', roomId: '1'),
@@ -39,7 +45,8 @@ class _SeatsListPageState extends State<SeatsListPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SeatPage(null, this.officeId)),
+                          builder: (context) =>
+                              SeatPage(null, this.officeId, null)),
                     );
                   },
                 ),
@@ -51,7 +58,7 @@ class _SeatsListPageState extends State<SeatsListPage> {
                     itemBuilder: (BuildContext context, int index) {
                       return new GestureDetector(
                           onTap: () =>
-                              openSeatPage(SeatsList[index].id, this.officeId),
+                              openSeatPage(SeatsList[index].id, null, null),
                           child: Container(
                             height: 50,
                             margin: EdgeInsets.all(2),
@@ -72,12 +79,12 @@ class _SeatsListPageState extends State<SeatsListPage> {
             )));
   }
 
-  openSeatPage(id, officeId) {
+  openSeatPage(seatId, roomId, officeId) {
     Navigator.push(
       context,
       new MaterialPageRoute(
         builder: (context) {
-          return new SeatPage(id, officeId);
+          return new SeatPage(seatId, officeId, null);
         },
       ),
     );

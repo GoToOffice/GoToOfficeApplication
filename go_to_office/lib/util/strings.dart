@@ -19,4 +19,5 @@ class Strings{
   static const view_list_seats = "View List of Seats";
   static const offices = "Offices";
   static const seats = "Seats";
+  static const save = "Save";
 }

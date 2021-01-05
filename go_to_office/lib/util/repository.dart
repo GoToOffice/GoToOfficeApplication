@@ -1,6 +1,10 @@
+import 'dart:collection';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:go_to_office/model/office.dart';
 import 'strings.dart';
 
 abstract class Repository {
@@ -11,6 +15,9 @@ abstract class Repository {
   Future<String> signIn(String email, String password) async {}
 
   Future<String> signOut() async {}
+
+  Future<List<Office>> fetchOffices() async {}
+  Future<bool> createUpdateOffice(Office newOffice) async {}
 }
 
 class FirebaseRepository implements Repository {
@@ -34,18 +41,70 @@ class FirebaseRepository implements Repository {
 
   @override
   Future<String> register(String _email, String _password) async {
-    UserCredential userCredential = await _auth
-        .createUserWithEmailAndPassword(email: _email, password: _password);
+    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _email, password: _password);
     return userCredential.user.uid;
   }
 
   @override
   Future<String> signIn(String _email, String _password) async {
-    UserCredential userCredential = await _auth
-        .signInWithEmailAndPassword(email: _email, password: _password);
+    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _email, password: _password);
     return userCredential.user.uid;
   }
 
+  @override
+  Future<List<Office>> fetchOffices() async {
+    var snapshot = await FirebaseDatabase.instance
+        .reference()
+        .child("offices")
+        .once()
+        .catchError((error) {
+      print("Something went wrong: ${error.message}");
+      return [];
+    });
+    LinkedHashMap offices = snapshot.value;
+    List<Office> list = List();
+    offices.forEach((key, val) {
+      list.add(Office(
+        name: val['name'],
+        country: val['country'],
+        description: val['description'],
+        id: key,
+      ));
+    });
+    return list;
+  }
+
+  @override
+  Future<bool> createUpdateOffice(Office newOffice) async {
+    //final tmpId = newOffice.id;
+    final office = {
+      'name': newOffice.name,
+      'description': newOffice.description,
+      'country': newOffice.country
+    };
+    if (newOffice.id.isEmpty ?? true) {
+      await FirebaseDatabase.instance
+          .reference()
+          .child("offices")
+          .push()
+          .set(office)
+          .catchError((error) {
+        print("Something went wrong: ${error.message}");
+        return false;
+      });
+    } else {
+      await FirebaseDatabase.instance
+          .reference()
+          .child("offices")
+          .child(newOffice.id)
+          .set(office)
+          .catchError((error) {
+        print("Something went wrong: ${error.message}");
+      });
+    }
+  }
 }
 
 class ErrorPage extends StatelessWidget {
