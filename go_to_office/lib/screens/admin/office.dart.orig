@@ -1,0 +1,172 @@
+import 'package:flutter/material.dart';
+<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
+import 'seat.page.dart';
+import 'seatsList.dart';
+import '../util/strings.dart';
+import '../model/office.model.dart';
+import '../util/repository.dart';
+
+
+void main(id) {
+  runApp(new MaterialApp(
+    title: Strings.office_manager,
+    home: new OfficePage(id, repository),
+  ));
+}
+=======
+
+import '../../util/strings.dart';
+import 'seat.dart';
+import 'seats_list.dart';
+>>>>>>> develop:go_to_office/lib/screens/admin/office.dart
+
+class OfficePage extends StatefulWidget {
+  final String id;
+  final Repository repository;
+
+  OfficePage(this.id, this.repository);
+  @override
+  State<StatefulWidget> createState() => _OfficePageState(id, repository);
+}
+
+class _OfficePageState extends State<OfficePage> {
+  final Office myOffice = Office();
+  final String id;
+<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
+  _OfficePageState(this.id, repository);
+=======
+  String officeName;
+  String officeCoutnry;
+  String officeDescription;
+  _OfficePageState(this.id);
+>>>>>>> develop:go_to_office/lib/screens/admin/office.dart
+  @override
+  Widget build(BuildContext context) {
+    if (this.id != null) {
+      // call API to get get office
+<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
+      getOfficeApi(this.id);
+    }
+=======
+      this.officeName = 'Herzeliya';
+      this.officeCoutnry = 'Israel';
+      this.officeDescription = 'Office description';
+    } else {
+      this.officeName = '';
+      this.officeCoutnry = '';
+      this.officeDescription = '';
+    }
+
+>>>>>>> develop:go_to_office/lib/screens/admin/office.dart
+    // Object officateAssreddress = {};
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(Strings.office_manager),
+          backgroundColor: Colors.blueAccent,
+        ),
+        body: SingleChildScrollView(
+            padding: EdgeInsets.all(15.0),
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
+                    initialValue: this.myOffice.name,
+=======
+                    initialValue: this.officeName,
+>>>>>>> develop:go_to_office/lib/screens/admin/office.dart
+                    decoration:
+                        InputDecoration(hintText: Strings.insert_office_name),
+                    onChanged: (String inputString) {
+                      setState(() {
+                        myOffice.name = inputString;
+                      });
+                    }),
+                TextFormField(
+<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
+                    initialValue: this.myOffice.country,
+=======
+                    initialValue: this.officeCoutnry,
+>>>>>>> develop:go_to_office/lib/screens/admin/office.dart
+                    decoration: InputDecoration(
+                        hintText: Strings.insert_office_country),
+                    onChanged: (String inputString) {
+                      setState(() {
+                        myOffice.country = inputString;
+                      });
+                    }),
+                TextFormField(
+<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
+                    initialValue: this.myOffice.description,
+=======
+                    initialValue: this.officeDescription,
+>>>>>>> develop:go_to_office/lib/screens/admin/office.dart
+                    decoration: InputDecoration(
+                        hintText: Strings.insert_office_description),
+                    onChanged: (String inputString) {
+                      setState(() {
+                        myOffice.description = inputString;
+                      });
+                    }),
+<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
+                Align(
+                  alignment: Alignment.topRight,
+                  child: ElevatedButton(
+                    child: Text(Strings.save),
+                    onPressed: () {
+                      creaetUpdateOffice();
+                    },
+                  ),
+                ),
+=======
+>>>>>>> develop:go_to_office/lib/screens/admin/office.dart
+                ElevatedButton(
+                  child: Text(Strings.add_new_seat),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
+                          builder: (context) => SeatPage(null, null, null)),
+=======
+                          builder: (context) => SeatPage(null, this.id)),
+>>>>>>> develop:go_to_office/lib/screens/admin/office.dart
+                    );
+                  },
+                ),
+                ElevatedButton(
+                  child: Text(Strings.view_list_seats),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
+                          builder: (context) =>
+                              SeatsListPage(this.myOffice.id)),
+=======
+                          builder: (context) => SeatsListPage(this.id)),
+>>>>>>> develop:go_to_office/lib/screens/admin/office.dart
+                    );
+                  },
+                ),
+              ],
+            )));
+  }
+
+  creaetUpdateOffice() {
+    if (this.myOffice.id != null) {
+      this.updateOfficeApi();
+    } else {
+      this.createOfficeApi();
+    }
+  }
+
+  updateOfficeApi() {}
+  createOfficeApi() {}
+  getOfficeApi(id) {
+    final myOffice = new Office(
+        id: null,
+        name: 'Herz-name',
+        description: 'Herz-Desc',
+        country: 'Israel');
+  }
+}

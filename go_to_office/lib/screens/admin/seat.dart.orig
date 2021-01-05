@@ -1,0 +1,101 @@
+import 'package:flutter/material.dart';
+import '../model/seat.model.dart';
+
+<<<<<<< HEAD:go_to_office/lib/admin/seat.page.dart
+void main(seatId, officeId, roomId) {
+  runApp(new MaterialApp(
+    title: "Office Manager",
+    home: new SeatPage(seatId, officeId, roomId),
+  ));
+}
+
+class SeatPage extends StatefulWidget {
+  final String seatId;
+  final String officeId;
+  final String roomId;
+  SeatPage(this.seatId, this.officeId, this.roomId);
+=======
+class SeatPage extends StatefulWidget {
+  SeatPage(this.seatId, this.officeId);
+  final String seatId;
+  final String officeId;
+>>>>>>> develop:go_to_office/lib/screens/admin/seat.dart
+
+  @override
+  State<StatefulWidget> createState() =>
+      _SeatPageState(seatId, officeId, roomId);
+}
+
+class _SeatPageState extends State<SeatPage> {
+  String seatId;
+  final String officeId;
+<<<<<<< HEAD:go_to_office/lib/admin/seat.page.dart
+  final String roomId;
+  final mySeat = new Seat(id: '1', location: null, roomId: null);
+  _SeatPageState(this.seatId, this.officeId, this.roomId);
+  @override
+  Widget build(BuildContext context) {
+    if (this.seatId != null) {
+      // call API to get get office
+      getSeatApi(this.seatId);
+    }
+    //this.roomId = '1';
+    if (this.seatId != null) {
+      // call API to get get office also get the office name
+      //this.seatLocation = 'Near a window';
+    } else {
+      //this.seatLocation = '';
+    }
+=======
+  String roomId;
+  String seatLocation;
+  _SeatPageState(this.seatId, this.officeId);
+  @override
+  Widget build(BuildContext context) {
+    this.roomId = '1';
+    if (this.seatId != null) {
+      // call API to get get office also get the office name
+      this.seatLocation = 'Near a window';
+    } else {
+      this.seatLocation = '';
+    }
+
+>>>>>>> develop:go_to_office/lib/screens/admin/seat.dart
+    // Object officateAssreddress = {};
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Seats Manager"),
+          backgroundColor: Colors.blueAccent,
+        ),
+        body: SingleChildScrollView(
+            padding: EdgeInsets.all(15.0),
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+<<<<<<< HEAD:go_to_office/lib/admin/seat.page.dart
+=======
+                    initialValue: this.seatLocation,
+>>>>>>> develop:go_to_office/lib/screens/admin/seat.dart
+                    decoration: InputDecoration(
+                        hintText: 'Please insert Seat Loaction in the room'),
+                    onChanged: (String inputString) {
+                      setState(() {
+                        this.mySeat.location = inputString;
+                      });
+                    }),
+              ],
+            )));
+  }
+
+  creaetUpdateSeat() {
+    if (this.seatId != null) {
+      this.updateSeateApi();
+    } else {
+      this.createSeatApi();
+    }
+  }
+
+  updateSeateApi() {}
+  createSeatApi() {}
+  getSeatApi(id) {}
+}

@@ -5,19 +5,17 @@ import '../util/strings.dart';
 import '../model/office.model.dart';
 import '../util/repository.dart';
 
-
-void main(id) {
-  runApp(new MaterialApp(
-    title: Strings.office_manager,
-    home: new OfficePage(id, repository),
-  ));
+void main(id, repository) {
+  // runApp(new MaterialApp(
+  //   title: Strings.office_manager,
+  //   home: new OfficePage(id, repository),
+  // ));
 }
 
 class OfficePage extends StatefulWidget {
+  OfficePage({this.id, this.repository});
   final String id;
   final Repository repository;
-
-  OfficePage(this.id, this.repository);
   @override
   State<StatefulWidget> createState() => _OfficePageState(id, repository);
 }
