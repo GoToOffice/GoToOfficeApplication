@@ -1,8 +1,8 @@
 class Office {
+  String id;
   String name;
   String description;
   String country;
-  String id;
 
-  Office({this.name, this.description, this.id, this.country});
+  Office({this.id, this.name, this.description, this.country});
 }

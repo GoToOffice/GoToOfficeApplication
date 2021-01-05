@@ -1,38 +1,42 @@
 import 'package:flutter/material.dart';
 import '../model/seat.model.dart';
 
-void main(seatId, officeId) {
+void main(seatId, officeId, roomId) {
   runApp(new MaterialApp(
     title: "Office Manager",
-    home: new SeatPage(seatId, officeId),
+    home: new SeatPage(seatId, officeId, roomId),
   ));
 }
 
 class SeatPage extends StatefulWidget {
-
-  SeatPage(this.seatId, this.officeId );
-    final String seatId;
-    final String officeId;
+  final String seatId;
+  final String officeId;
+  final String roomId;
+  SeatPage(this.seatId, this.officeId, this.roomId);
 
   @override
-  State<StatefulWidget> createState() => _SeatPageState(seatId, officeId);
+  State<StatefulWidget> createState() =>
+      _SeatPageState(seatId, officeId, roomId);
 }
 
 class _SeatPageState extends State<SeatPage> {
-  final String seatId;
+  String seatId;
   final String officeId;
-   final Seat mySeat = new Seat({null, '1',  null}) ;
-   _SeatPageState(this.seatId, this.officeId);
+  final String roomId;
+  final mySeat = new Seat(id: '1', location: null, roomId: null);
+  _SeatPageState(this.seatId, this.officeId, this.roomId);
   @override
   Widget build(BuildContext context) {
-    if (this.seatId != null) {  // call API to get get office
-      getSeatApi(this.seatId);    
-    } 
-    this.roomId = '1';
-    if (this.seatId != null) {  // call API to get get office also get the office name
-    this.seatLocation = 'Near a window';
+    if (this.seatId != null) {
+      // call API to get get office
+      getSeatApi(this.seatId);
+    }
+    //this.roomId = '1';
+    if (this.seatId != null) {
+      // call API to get get office also get the office name
+      //this.seatLocation = 'Near a window';
     } else {
-      this.seatLocation = '';
+      //this.seatLocation = '';
     }
     // Object officateAssreddress = {};
     return Scaffold(
@@ -44,32 +48,27 @@ class _SeatPageState extends State<SeatPage> {
             padding: EdgeInsets.all(15.0),
             child: Column(
               children: <Widget>[
-                  TextFormField(
-                  initialValue: this.seatLocation,
+                TextFormField(
                     decoration: InputDecoration(
                         hintText: 'Please insert Seat Loaction in the room'),
                     onChanged: (String inputString) {
                       setState(() {
-                        seatLocation = inputString;
+                        this.mySeat.location = inputString;
                       });
                     }),
               ],
             )));
   }
-  CreaetUpdateSeat() {
-    if (this.myOffice.id != null) {  
-      this.UpdateSeatApi();
+
+  creaetUpdateSeat() {
+    if (this.seatId != null) {
+      this.updateSeateApi();
     } else {
       this.createSeatApi();
     }
   }
-UpdateSeateApi(){
 
-  }
-  createSeatApi(){
-
-  }
-  getSeatApi(id) {
-
-  }
+  updateSeateApi() {}
+  createSeatApi() {}
+  getSeatApi(id) {}
 }
