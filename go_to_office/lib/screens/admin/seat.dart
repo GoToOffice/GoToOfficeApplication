@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../model/seat.model.dart';
+import '../../model/seat.dart';
 
-<<<<<<< HEAD:go_to_office/lib/admin/seat.page.dart
 void main(seatId, officeId, roomId) {
   runApp(new MaterialApp(
     title: "Office Manager",
@@ -14,12 +13,6 @@ class SeatPage extends StatefulWidget {
   final String officeId;
   final String roomId;
   SeatPage(this.seatId, this.officeId, this.roomId);
-=======
-class SeatPage extends StatefulWidget {
-  SeatPage(this.seatId, this.officeId);
-  final String seatId;
-  final String officeId;
->>>>>>> develop:go_to_office/lib/screens/admin/seat.dart
 
   @override
   State<StatefulWidget> createState() =>
@@ -29,7 +22,6 @@ class SeatPage extends StatefulWidget {
 class _SeatPageState extends State<SeatPage> {
   String seatId;
   final String officeId;
-<<<<<<< HEAD:go_to_office/lib/admin/seat.page.dart
   final String roomId;
   final mySeat = new Seat(id: '1', location: null, roomId: null);
   _SeatPageState(this.seatId, this.officeId, this.roomId);
@@ -46,21 +38,6 @@ class _SeatPageState extends State<SeatPage> {
     } else {
       //this.seatLocation = '';
     }
-=======
-  String roomId;
-  String seatLocation;
-  _SeatPageState(this.seatId, this.officeId);
-  @override
-  Widget build(BuildContext context) {
-    this.roomId = '1';
-    if (this.seatId != null) {
-      // call API to get get office also get the office name
-      this.seatLocation = 'Near a window';
-    } else {
-      this.seatLocation = '';
-    }
-
->>>>>>> develop:go_to_office/lib/screens/admin/seat.dart
     // Object officateAssreddress = {};
     return Scaffold(
         appBar: AppBar(
@@ -72,10 +49,6 @@ class _SeatPageState extends State<SeatPage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-<<<<<<< HEAD:go_to_office/lib/admin/seat.page.dart
-=======
-                    initialValue: this.seatLocation,
->>>>>>> develop:go_to_office/lib/screens/admin/seat.dart
                     decoration: InputDecoration(
                         hintText: 'Please insert Seat Loaction in the room'),
                     onChanged: (String inputString) {

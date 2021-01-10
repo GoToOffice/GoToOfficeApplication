@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'seat.page.dart';
-import '../util/strings.dart';
-import '../model/seat.model.dart';
+import 'seat.dart';
+import '../../util/strings.dart';
+import '../../model/seat.dart';
 
 void main(officeId) {
   runApp(new MaterialApp(

@@ -1,64 +1,30 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
-import 'seat.page.dart';
-import 'seatsList.dart';
-import '../util/strings.dart';
-import '../model/office.model.dart';
-import '../util/repository.dart';
-
-
-void main(id) {
-  runApp(new MaterialApp(
-    title: Strings.office_manager,
-    home: new OfficePage(id, repository),
-  ));
-}
-=======
-
-import '../../util/strings.dart';
 import 'seat.dart';
 import 'seats_list.dart';
->>>>>>> develop:go_to_office/lib/screens/admin/office.dart
+import '../../util/strings.dart';
+import '../../model/office.dart';
+import '../../util/repository.dart';
 
 class OfficePage extends StatefulWidget {
+  OfficePage({this.id, this.repository});
   final String id;
   final Repository repository;
-
-  OfficePage(this.id, this.repository);
   @override
   State<StatefulWidget> createState() => _OfficePageState(id, repository);
 }
 
 class _OfficePageState extends State<OfficePage> {
   final Office myOffice = Office();
+  final Repository repository;
   final String id;
-<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
-  _OfficePageState(this.id, repository);
-=======
-  String officeName;
-  String officeCoutnry;
-  String officeDescription;
-  _OfficePageState(this.id);
->>>>>>> develop:go_to_office/lib/screens/admin/office.dart
+
+  _OfficePageState(this.id, this.repository);
   @override
   Widget build(BuildContext context) {
     if (this.id != null) {
       // call API to get get office
-<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
       getOfficeApi(this.id);
     }
-=======
-      this.officeName = 'Herzeliya';
-      this.officeCoutnry = 'Israel';
-      this.officeDescription = 'Office description';
-    } else {
-      this.officeName = '';
-      this.officeCoutnry = '';
-      this.officeDescription = '';
-    }
-
->>>>>>> develop:go_to_office/lib/screens/admin/office.dart
-    // Object officateAssreddress = {};
     return Scaffold(
         appBar: AppBar(
           title: Text(Strings.office_manager),
@@ -69,11 +35,7 @@ class _OfficePageState extends State<OfficePage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
                     initialValue: this.myOffice.name,
-=======
-                    initialValue: this.officeName,
->>>>>>> develop:go_to_office/lib/screens/admin/office.dart
                     decoration:
                         InputDecoration(hintText: Strings.insert_office_name),
                     onChanged: (String inputString) {
@@ -82,11 +44,7 @@ class _OfficePageState extends State<OfficePage> {
                       });
                     }),
                 TextFormField(
-<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
                     initialValue: this.myOffice.country,
-=======
-                    initialValue: this.officeCoutnry,
->>>>>>> develop:go_to_office/lib/screens/admin/office.dart
                     decoration: InputDecoration(
                         hintText: Strings.insert_office_country),
                     onChanged: (String inputString) {
@@ -95,11 +53,7 @@ class _OfficePageState extends State<OfficePage> {
                       });
                     }),
                 TextFormField(
-<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
                     initialValue: this.myOffice.description,
-=======
-                    initialValue: this.officeDescription,
->>>>>>> develop:go_to_office/lib/screens/admin/office.dart
                     decoration: InputDecoration(
                         hintText: Strings.insert_office_description),
                     onChanged: (String inputString) {
@@ -107,7 +61,6 @@ class _OfficePageState extends State<OfficePage> {
                         myOffice.description = inputString;
                       });
                     }),
-<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
                 Align(
                   alignment: Alignment.topRight,
                   child: ElevatedButton(
@@ -117,19 +70,13 @@ class _OfficePageState extends State<OfficePage> {
                     },
                   ),
                 ),
-=======
->>>>>>> develop:go_to_office/lib/screens/admin/office.dart
                 ElevatedButton(
                   child: Text(Strings.add_new_seat),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
                           builder: (context) => SeatPage(null, null, null)),
-=======
-                          builder: (context) => SeatPage(null, this.id)),
->>>>>>> develop:go_to_office/lib/screens/admin/office.dart
                     );
                   },
                 ),
@@ -139,12 +86,8 @@ class _OfficePageState extends State<OfficePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-<<<<<<< HEAD:go_to_office/lib/admin/office.page.dart
                           builder: (context) =>
                               SeatsListPage(this.myOffice.id)),
-=======
-                          builder: (context) => SeatsListPage(this.id)),
->>>>>>> develop:go_to_office/lib/screens/admin/office.dart
                     );
                   },
                 ),
@@ -156,7 +99,9 @@ class _OfficePageState extends State<OfficePage> {
     if (this.myOffice.id != null) {
       this.updateOfficeApi();
     } else {
-      this.createOfficeApi();
+      if (repository != null) {
+        repository.createOffice(myOffice);
+      }
     }
   }
 

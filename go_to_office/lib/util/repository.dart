@@ -1,6 +1,10 @@
+import 'dart:collection';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:go_to_office/model/office.dart';
 import 'strings.dart';
 
 abstract class Repository {
@@ -11,6 +15,9 @@ abstract class Repository {
   Future<String> signIn(String email, String password) async {}
 
   Future<String> signOut() async {}
+
+  Future<List<Office>> fetchOffices() async {}
+  Future<bool> createOffice(Office newOffice) async {}
 }
 
 class FirebaseRepository implements Repository {
@@ -34,18 +41,46 @@ class FirebaseRepository implements Repository {
 
   @override
   Future<String> register(String _email, String _password) async {
-    UserCredential userCredential = await _auth
-        .createUserWithEmailAndPassword(email: _email, password: _password);
+    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _email, password: _password);
     return userCredential.user.uid;
   }
 
   @override
   Future<String> signIn(String _email, String _password) async {
-    UserCredential userCredential = await _auth
-        .signInWithEmailAndPassword(email: _email, password: _password);
+    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _email, password: _password);
     return userCredential.user.uid;
   }
 
+  @override
+  Future<List<Office>> fetchOffices() async {
+    var snapshot =
+        await FirebaseDatabase.instance.reference().child("offices").once();
+    LinkedHashMap offices = snapshot.value;
+    List<Office> list = List();
+    offices.forEach((key, val) {
+      list.add(Office(
+          name: val['name'],
+          description: val['description'],
+          id: key,
+          country: val['country']));
+    });
+    return list;
+  }
+
+  @override
+  Future<bool> createOffice(Office newOffice) async {
+    await FirebaseDatabase.instance.reference().child("offices").set({
+      'name': newOffice.name,
+      'description': newOffice.description,
+      'id': DateTime.now().toString(),
+      'country': newOffice.country
+    }).catchError((error) {
+      print("Something went wrong: ${error.message}");
+      return false;
+    });
+  }
 }
 
 class ErrorPage extends StatelessWidget {
