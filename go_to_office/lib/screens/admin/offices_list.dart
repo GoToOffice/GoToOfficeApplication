@@ -20,14 +20,9 @@ class _OfficesListPage extends State<OfficesListPage> {
   static Future<List<Office>> officesList;
 
   @override
-  void initState() {
-    super.initState();
-    officesList = getOfficesListApi();
-  }
-
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: officesList,
+        future: getOfficesListApi(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
@@ -44,12 +39,7 @@ class _OfficesListPage extends State<OfficesListPage> {
                     ElevatedButton(
                       child: Text(Strings.add_new_office),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  OfficePage(id: null, repository: repository)),
-                        );
+                        openOfficePage(Office(), context);
                       },
                     ),
                     ListView.builder(
@@ -60,7 +50,7 @@ class _OfficesListPage extends State<OfficesListPage> {
                         itemBuilder: (BuildContext context, int index) {
                           return new GestureDetector(
                             onTap: () => openOfficePage(
-                                officesListLocal[index].id, context),
+                                officesListLocal[index], context),
                             child: Container(
                                 height: 50,
                                 margin: EdgeInsets.all(2),
@@ -72,17 +62,21 @@ class _OfficesListPage extends State<OfficesListPage> {
                         })
                   ]),
                 ));
+          } else {
+            return Transform.scale(
+              scale: 0.1,
+              child: CircularProgressIndicator(),
+            );
           }
-          return Text('List is empty or cannot be fetched');
         });
   }
 
-  openOfficePage(id, context) {
+  openOfficePage(Office office, context) {
     Navigator.push(
       context,
       new MaterialPageRoute(
         builder: (context) {
-          return new OfficePage(id: id, repository: repository);
+          return new OfficePage(myOffice: office, repository: repository);
         },
       ),
     );

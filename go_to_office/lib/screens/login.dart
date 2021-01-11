@@ -103,9 +103,7 @@ class _LoginPageState extends State<LoginPage> {
     /// If the user is not registered, this method registers the user and then sign him in.
     void _onLoginRequest(String pressedOption) {
       String _email = _userTextController.text?.toString();
-      _email = 'orly.reznik@logmein.com';
       String _password = _passTextController.text?.toString();
-      _password = 'blabla';
 
       if (_userCredentialsValidation(_email, _password)) {
         repository.signIn(_email, _password).then((value) {

@@ -17,7 +17,7 @@ abstract class Repository {
   Future<String> signOut() async {}
 
   Future<List<Office>> fetchOffices() async {}
-  Future<bool> createOffice(Office newOffice) async {}
+  Future<bool> createUpdateOffice(Office newOffice) async {}
 }
 
 class FirebaseRepository implements Repository {
@@ -55,31 +55,55 @@ class FirebaseRepository implements Repository {
 
   @override
   Future<List<Office>> fetchOffices() async {
-    var snapshot =
-        await FirebaseDatabase.instance.reference().child("offices").once();
+    var snapshot = await FirebaseDatabase.instance
+        .reference()
+        .child("offices")
+        .once()
+        .catchError((error) {
+      print("Something went wrong: ${error.message}");
+      return [];
+    });
     LinkedHashMap offices = snapshot.value;
     List<Office> list = List();
     offices.forEach((key, val) {
       list.add(Office(
-          name: val['name'],
-          description: val['description'],
-          id: key,
-          country: val['country']));
+        name: val['name'],
+        country: val['country'],
+        description: val['description'],
+        id: key,
+      ));
     });
     return list;
   }
 
   @override
-  Future<bool> createOffice(Office newOffice) async {
-    await FirebaseDatabase.instance.reference().child("offices").set({
+  Future<bool> createUpdateOffice(Office newOffice) async {
+    //final tmpId = newOffice.id;
+    final office = {
       'name': newOffice.name,
       'description': newOffice.description,
-      'id': DateTime.now().toString(),
       'country': newOffice.country
-    }).catchError((error) {
-      print("Something went wrong: ${error.message}");
-      return false;
-    });
+    };
+    if (newOffice.id.isEmpty ?? true) {
+      await FirebaseDatabase.instance
+          .reference()
+          .child("offices")
+          .push()
+          .set(office)
+          .catchError((error) {
+        print("Something went wrong: ${error.message}");
+        return false;
+      });
+    } else {
+      await FirebaseDatabase.instance
+          .reference()
+          .child("offices")
+          .child(newOffice.id)
+          .set(office)
+          .catchError((error) {
+        print("Something went wrong: ${error.message}");
+      });
+    }
   }
 }
 

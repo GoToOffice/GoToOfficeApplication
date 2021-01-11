@@ -8,5 +8,4 @@ class Office {
   String country;
 
   Office({this.name, this.description, this.id, this.country});
-
 }

@@ -6,25 +6,20 @@ import '../../model/office.dart';
 import '../../util/repository.dart';
 
 class OfficePage extends StatefulWidget {
-  OfficePage({this.id, this.repository});
-  final String id;
+  OfficePage({this.myOffice, this.repository});
+  final Office myOffice;
   final Repository repository;
   @override
-  State<StatefulWidget> createState() => _OfficePageState(id, repository);
+  State<StatefulWidget> createState() => _OfficePageState(myOffice, repository);
 }
 
 class _OfficePageState extends State<OfficePage> {
-  final Office myOffice = Office();
+  final Office myOffice;
   final Repository repository;
-  final String id;
 
-  _OfficePageState(this.id, this.repository);
+  _OfficePageState(this.myOffice, this.repository);
   @override
   Widget build(BuildContext context) {
-    if (this.id != null) {
-      // call API to get get office
-      getOfficeApi(this.id);
-    }
     return Scaffold(
         appBar: AppBar(
           title: Text(Strings.office_manager),
@@ -40,7 +35,7 @@ class _OfficePageState extends State<OfficePage> {
                         InputDecoration(hintText: Strings.insert_office_name),
                     onChanged: (String inputString) {
                       setState(() {
-                        myOffice.name = inputString;
+                        this.myOffice.name = inputString;
                       });
                     }),
                 TextFormField(
@@ -49,7 +44,7 @@ class _OfficePageState extends State<OfficePage> {
                         hintText: Strings.insert_office_country),
                     onChanged: (String inputString) {
                       setState(() {
-                        myOffice.country = inputString;
+                        this.myOffice.country = inputString;
                       });
                     }),
                 TextFormField(
@@ -58,7 +53,7 @@ class _OfficePageState extends State<OfficePage> {
                         hintText: Strings.insert_office_description),
                     onChanged: (String inputString) {
                       setState(() {
-                        myOffice.description = inputString;
+                        this.myOffice.description = inputString;
                       });
                     }),
                 Align(
@@ -95,23 +90,9 @@ class _OfficePageState extends State<OfficePage> {
             )));
   }
 
-  creaetUpdateOffice() {
-    if (this.myOffice.id != null) {
-      this.updateOfficeApi();
-    } else {
-      if (repository != null) {
-        repository.createOffice(myOffice);
-      }
+  Future<bool> creaetUpdateOffice() {
+    if (repository != null) {
+      return repository.createUpdateOffice(this.myOffice);
     }
-  }
-
-  updateOfficeApi() {}
-  createOfficeApi() {}
-  getOfficeApi(id) {
-    final myOffice = new Office(
-        id: null,
-        name: 'Herz-name',
-        description: 'Herz-Desc',
-        country: 'Israel');
   }
 }
