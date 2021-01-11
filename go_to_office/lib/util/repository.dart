@@ -66,7 +66,6 @@ class FirebaseRepository implements Repository {
           id: key,
           country: val['country']));
     });
-    return list;
   }
 
   @override
