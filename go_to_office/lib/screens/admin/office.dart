@@ -16,9 +16,14 @@ class OfficePage extends StatefulWidget {
 class _OfficePageState extends State<OfficePage> {
   final Office myOffice;
   final Repository repository;
+  bool _isSaveButtonDisabled;
 
   _OfficePageState(this.myOffice, this.repository);
   @override
+  void initState() {
+    _isSaveButtonDisabled = false;
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -59,11 +64,12 @@ class _OfficePageState extends State<OfficePage> {
                 Align(
                   alignment: Alignment.topRight,
                   child: ElevatedButton(
-                    child: Text(Strings.save),
-                    onPressed: () {
-                      creaetUpdateOffice();
-                    },
-                  ),
+                      child: Text(Strings.save),
+                      onPressed: _isSaveButtonDisabled
+                          ? null
+                          : () {
+                              creaetUpdateOffice();
+                            }),
                 ),
                 ElevatedButton(
                   child: Text(Strings.add_new_seat),
@@ -71,7 +77,8 @@ class _OfficePageState extends State<OfficePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SeatPage(null, null, null)),
+                          builder: (context) =>
+                              SeatPage(null, null, null, repository)),
                     );
                   },
                 ),
@@ -82,7 +89,7 @@ class _OfficePageState extends State<OfficePage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              SeatsListPage(this.myOffice.id)),
+                              SeatsListPage(this.myOffice.id, this.repository)),
                     );
                   },
                 ),

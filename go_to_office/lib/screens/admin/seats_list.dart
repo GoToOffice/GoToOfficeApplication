@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 import 'seat.dart';
 import '../../util/strings.dart';
 import '../../model/seat.dart';
+import '../../util/repository.dart';
 
-void main(officeId) {
-  runApp(new MaterialApp(
-    title: Strings.seats,
-    home: new SeatsListPage(officeId),
-  ));
-}
 
 final List<Seat> SeatsList = [
   Seat(location: 'Herzeliya', id: '1', roomId: '1'),
@@ -17,16 +12,18 @@ final List<Seat> SeatsList = [
 ];
 
 class SeatsListPage extends StatefulWidget {
-  SeatsListPage(this.officeId);
+  final Repository repository;
+  SeatsListPage(this.officeId, this.repository);
   final String officeId;
 
   @override
-  State<StatefulWidget> createState() => _SeatsListPageState(officeId);
+  State<StatefulWidget> createState() => _SeatsListPageState(officeId, repository);
 }
 
 class _SeatsListPageState extends State<SeatsListPage> {
   final String officeId;
-  _SeatsListPageState(this.officeId);
+  final Repository repository;
+  _SeatsListPageState(this.officeId, this.repository);
   @override
   Widget build(BuildContext context) {
     // Object officateAssreddress = {};
@@ -46,7 +43,7 @@ class _SeatsListPageState extends State<SeatsListPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              SeatPage(null, this.officeId, null)),
+                              SeatPage(null, this.officeId, null, repository)),
                     );
                   },
                 ),
@@ -84,7 +81,7 @@ class _SeatsListPageState extends State<SeatsListPage> {
       context,
       new MaterialPageRoute(
         builder: (context) {
-          return new SeatPage(seatId, officeId, null);
+          return new SeatPage(seatId, officeId, null, repository);
         },
       ),
     );

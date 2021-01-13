@@ -1,44 +1,29 @@
-import 'package:flutter/material.dart';
 import '../../model/seat.dart';
-
-void main(seatId, officeId, roomId) {
-  runApp(new MaterialApp(
-    title: "Office Manager",
-    home: new SeatPage(seatId, officeId, roomId),
-  ));
-}
+import 'package:flutter/material.dart';
+import '../../util/repository.dart';
 
 class SeatPage extends StatefulWidget {
-  final String seatId;
+  SeatPage(this.mySeat, this.officeId, this.roomId, this.repository);
+  final Seat mySeat;
   final String officeId;
   final String roomId;
-  SeatPage(this.seatId, this.officeId, this.roomId);
+  final Repository repository;
 
   @override
   State<StatefulWidget> createState() =>
-      _SeatPageState(seatId, officeId, roomId);
+      _SeatPageState(mySeat, roomId, officeId, repository);
 }
 
 class _SeatPageState extends State<SeatPage> {
-  String seatId;
-  final String officeId;
+  final Seat mySeat;
   final String roomId;
-  final mySeat = new Seat(id: '1', location: null, roomId: null);
-  _SeatPageState(this.seatId, this.officeId, this.roomId);
+  final String officeId;
+  final Repository repository;
+
+  _SeatPageState(this.mySeat, this.roomId, this.officeId, this.repository);
   @override
   Widget build(BuildContext context) {
-    if (this.seatId != null) {
-      // call API to get get office
-      getSeatApi(this.seatId);
-    }
     //this.roomId = '1';
-    if (this.seatId != null) {
-      // call API to get get office also get the office name
-      //this.seatLocation = 'Near a window';
-    } else {
-      //this.seatLocation = '';
-    }
-    // Object officateAssreddress = {};
     return Scaffold(
         appBar: AppBar(
           title: Text("Seats Manager"),
@@ -60,13 +45,7 @@ class _SeatPageState extends State<SeatPage> {
             )));
   }
 
-  creaetUpdateSeat() {
-    if (this.seatId != null) {
-      this.updateSeateApi();
-    } else {
-      this.createSeatApi();
-    }
-  }
+  creaetUpdateSeat() {}
 
   updateSeateApi() {}
   createSeatApi() {}
