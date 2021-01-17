@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_to_office/util/repository.dart';
+import 'package:go_to_office/util/strings.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -22,19 +24,20 @@ class _UserProfilePageState extends State<UserProfilePage> {
   String _path;
   String _imageURL;
 
+  final _userTextController = TextEditingController();
+
   @override
   void initState() {
-    downloadProfilePic();
+    getAvatarURL();
     super.initState();
   }
 
-  Future<void> downloadProfilePic() async {
-    String downloadURL = await repository.getProfileImageUrl();
+  Future<void> getAvatarURL() async {
+    String downloadURL = await repository.getAvatarUrl();
 
     setState(() {
       _imageURL = downloadURL;
     });
-
   }
 
   void _showPhotoLibrary() async {
@@ -42,9 +45,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
     setState(() {
       _path = file.path;
-      repository.uploadProfileImage(File(_path)).then((value) =>
-          downloadProfilePic()
-      );
+      repository.uploadAvatar(File(_path)).then((value) => getAvatarURL());
     });
   }
 
@@ -59,9 +60,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
     setState(() {
       _path = pickedFile.path;
-      repository.uploadProfileImage(File(_path)).then((value) =>
-          downloadProfilePic()
-      );
+      repository.uploadAvatar(File(_path)).then((value) => getAvatarURL());
     });
   }
 
@@ -91,23 +90,48 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   @override
+  void dispose() {
+    // Cleans up the controller when the widget is disposed.
+    _userTextController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final nameField = TextFormField(
+      controller: _userTextController,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    );
+
     return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
         body: SingleChildScrollView(
             child: Center(
                 child: Container(
-                    color: Colors.blue,
+                    color: Colors.white,
                     child: Padding(
                         padding: const EdgeInsets.all(36.0),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              SizedBox(
-                                height: 200.0,
-                                child:  _imageURL != null
-                                    ? Image.network(_imageURL, fit: BoxFit.contain)
-                                    : Image.asset("assets/user_48.png", fit: BoxFit.contain)
+                              Container(
+                                  width: 200,
+                                  height: 200,
+                                  child: ClipOval(
+                                      child: _imageURL == null
+                                          ? Image.asset('assets/user_profile_b_24.png', fit: BoxFit.fill)
+                                          : CachedNetworkImage(
+                                              placeholder: (context, url) => CircularProgressIndicator(),
+                                              imageUrl: _imageURL,
+                                              fit: BoxFit.fill,
+                                            )
+                                  )
                               ),
                               FlatButton(
                                 child: Text("Change profile pic",
@@ -116,7 +140,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 onPressed: () {
                                   _showOptions(context);
                                 },
-                              )
+                              ),
                             ]))))));
   }
 }

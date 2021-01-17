@@ -12,6 +12,7 @@ abstract class Repository {
 
   Stream<dynamic> getAuthChangesStream();
 
+
   Future initialize() async {}
 
   Future<String> register(String email, String password) async {}
@@ -20,9 +21,9 @@ abstract class Repository {
 
   Future<String> signOut() async {}
 
-  Future<TaskSnapshot> uploadProfileImage(File file) async {}
+  Future<TaskSnapshot> uploadAvatar(File file) async {}
 
-  Future<String> getProfileImageUrl() async {}
+  Future<String> getAvatarUrl() async {}
 
 }
 
@@ -36,14 +37,14 @@ class FirebaseRepository implements Repository {
     FirebaseAuth.instance.authStateChanges();
   }
 
-  Future<String> getProfileImageUrl() async {
+  Future<String> getAvatarUrl() async {
 
-    final ref = FirebaseStorage.instance.ref().child(_auth.currentUser.email).child('/profile.jpg');
+    final ref = FirebaseStorage.instance.ref().child(_auth.currentUser.email);
     return await ref.getDownloadURL();
   }
 
   @override
-  Future<TaskSnapshot> uploadProfileImage(File file) async {
+  Future<TaskSnapshot> uploadAvatar(File file) async {
 
     if (file == null) {
       return null;
@@ -53,8 +54,7 @@ class FirebaseRepository implements Repository {
 
     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
         .ref()
-        .child(_auth.currentUser.email)
-        .child('/profile.jpg');
+        .child(_auth.currentUser.email);
 
     final metadata = firebase_storage.SettableMetadata(
         contentType: 'image/jpeg',
