@@ -21,9 +21,14 @@ void showMessage(String text, String messageType) {
         backgroundColor = Colors.yellow;
       }
       break;
-    case 'error':
+    case 'message':
       {
         backgroundColor = Colors.green;
+      }
+      break;
+    default:
+      {
+        backgroundColor = Colors.yellow;
       }
       break;
   }

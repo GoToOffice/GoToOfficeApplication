@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:go_to_office/main.dart';
 import 'package:go_to_office/model/office.dart';
 import 'strings.dart';
 
@@ -90,7 +91,7 @@ class FirebaseRepository implements Repository {
           .push()
           .set(office)
           .catchError((error) {
-        print("Something went wrong: ${error.message}");
+        showMessage("Something went wrong: ${error.message}", 'Error');
         return false;
       });
     } else {
@@ -99,8 +100,10 @@ class FirebaseRepository implements Repository {
           .child("offices")
           .child(newOffice.id)
           .set(office)
-          .catchError((error) {
-        print("Something went wrong: ${error.message}");
+          .then((v) {
+        showMessage("Office was saved succesfuly", 'Message');
+      }).catchError((error) {
+        //showMessage("Something went wrong: ${error.message}", 'Error');
       });
     }
   }

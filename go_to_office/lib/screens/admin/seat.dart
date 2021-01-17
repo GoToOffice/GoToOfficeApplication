@@ -23,7 +23,6 @@ class _SeatPageState extends State<SeatPage> {
   _SeatPageState(this.seat, this.roomId, this.officeId, this.repository);
   @override
   Widget build(BuildContext context) {
-    //this.roomId = '1';
     return Scaffold(
         appBar: AppBar(
           title: Text("Seats Manager"),
