@@ -8,6 +8,30 @@ void main() {
   runApp(GTOApp());
 }
 
+void showMessage(String text, String messageType) {
+  var backgroundColor;
+  switch (messageType.toLowerCase()) {
+    case 'error':
+      {
+        backgroundColor = Colors.red;
+      }
+      break;
+    case 'warning':
+      {
+        backgroundColor = Colors.yellow;
+      }
+      break;
+    case 'error':
+      {
+        backgroundColor = Colors.green;
+      }
+      break;
+  }
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  _scaffoldKey.currentState.showSnackBar(
+      SnackBar(content: Text(text), backgroundColor: backgroundColor));
+}
+
 class GTOApp extends StatelessWidget {
   // This widget is the root of the application.
 

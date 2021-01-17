@@ -17,7 +17,7 @@ abstract class Repository {
   Future<String> signOut() async {}
 
   Future<List<Office>> fetchOffices() async {}
-  Future<bool> createUpdateOffice(Office newOffice) async {}
+  Future<bool> updateOffice(Office newOffice) async {}
 }
 
 class FirebaseRepository implements Repository {
@@ -77,8 +77,7 @@ class FirebaseRepository implements Repository {
   }
 
   @override
-  Future<bool> createUpdateOffice(Office newOffice) async {
-    //final tmpId = newOffice.id;
+  Future<bool> updateOffice(Office newOffice) async {
     final office = {
       'name': newOffice.name,
       'description': newOffice.description,

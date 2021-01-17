@@ -9,20 +9,20 @@ class OfficesListPage extends StatefulWidget {
   const OfficesListPage({Key key, this.repository}) : super(key: key);
 
   @override
-  _OfficesListPage createState() {
-    return _OfficesListPage(repository);
+  _OfficesListPageState createState() {
+    return _OfficesListPageState(repository);
   }
 }
 
-class _OfficesListPage extends State<OfficesListPage> {
+class _OfficesListPageState extends State<OfficesListPage> {
   final Repository repository;
-  _OfficesListPage(this.repository);
+  _OfficesListPageState(this.repository);
   static Future<List<Office>> officesList;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getOfficesListApi(),
+        future: getOfficesList(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
@@ -76,13 +76,13 @@ class _OfficesListPage extends State<OfficesListPage> {
       context,
       new MaterialPageRoute(
         builder: (context) {
-          return new OfficePage(myOffice: office, repository: repository);
+          return new OfficePage(office: office, repository: repository);
         },
       ),
     );
   }
 
-  Future<List<Office>> getOfficesListApi() async {
+  Future<List<Office>> getOfficesList() async {
     final response = await repository.fetchOffices();
     return response;
   }

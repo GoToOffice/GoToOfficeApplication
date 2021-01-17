@@ -3,24 +3,24 @@ import 'package:flutter/material.dart';
 import '../../util/repository.dart';
 
 class SeatPage extends StatefulWidget {
-  SeatPage(this.mySeat, this.officeId, this.roomId, this.repository);
-  final Seat mySeat;
+  SeatPage(this.seat, this.officeId, this.roomId, this.repository);
+  final Seat seat;
   final String officeId;
   final String roomId;
   final Repository repository;
 
   @override
   State<StatefulWidget> createState() =>
-      _SeatPageState(mySeat, roomId, officeId, repository);
+      _SeatPageState(seat, roomId, officeId, repository);
 }
 
 class _SeatPageState extends State<SeatPage> {
-  final Seat mySeat;
+  final Seat seat;
   final String roomId;
   final String officeId;
   final Repository repository;
 
-  _SeatPageState(this.mySeat, this.roomId, this.officeId, this.repository);
+  _SeatPageState(this.seat, this.roomId, this.officeId, this.repository);
   @override
   Widget build(BuildContext context) {
     //this.roomId = '1';
@@ -38,16 +38,14 @@ class _SeatPageState extends State<SeatPage> {
                         hintText: 'Please insert Seat Loaction in the room'),
                     onChanged: (String inputString) {
                       setState(() {
-                        this.mySeat.location = inputString;
+                        this.seat.location = inputString;
                       });
                     }),
               ],
             )));
   }
 
-  creaetUpdateSeat() {}
+  updateSeat() {}
 
-  updateSeateApi() {}
-  createSeatApi() {}
-  getSeatApi(id) {}
+  getSeat(id) {}
 }
