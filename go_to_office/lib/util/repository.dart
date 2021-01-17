@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'strings.dart';
+import 'dart:io' as io;
 
 abstract class Repository {
 
@@ -14,6 +19,11 @@ abstract class Repository {
   Future<String> signIn(String email, String password) async {}
 
   Future<String> signOut() async {}
+
+  Future<TaskSnapshot> uploadProfileImage(File file) async {}
+
+  Future<String> getProfileImageUrl() async {}
+
 }
 
 class FirebaseRepository implements Repository {
@@ -24,6 +34,34 @@ class FirebaseRepository implements Repository {
     await Firebase.initializeApp();
     _auth = FirebaseAuth.instance;
     FirebaseAuth.instance.authStateChanges();
+  }
+
+  Future<String> getProfileImageUrl() async {
+
+    final ref = FirebaseStorage.instance.ref().child(_auth.currentUser.email).child('/profile.jpg');
+    return await ref.getDownloadURL();
+  }
+
+  @override
+  Future<TaskSnapshot> uploadProfileImage(File file) async {
+
+    if (file == null) {
+      return null;
+    }
+
+    firebase_storage.UploadTask uploadTask;
+
+    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child(_auth.currentUser.email)
+        .child('/profile.jpg');
+
+    final metadata = firebase_storage.SettableMetadata(
+        contentType: 'image/jpeg',
+        customMetadata: {'picked-file-path': file.path});
+        uploadTask = ref.putFile(io.File(file.path), metadata);
+
+    return Future.value(uploadTask);
   }
 
   @override

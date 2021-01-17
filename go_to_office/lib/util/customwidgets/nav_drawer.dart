@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:go_to_office/screens/user_profile/take_a_pic.dart';
+import 'package:go_to_office/screens/user_profile/profile_page.dart';
 import 'package:go_to_office/util/repository.dart';
 import 'package:go_to_office/util/strings.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// An independent Navigation Drawer to take place at the two main pages
 class NavDrawer extends StatefulWidget {
@@ -27,6 +30,10 @@ class _NavDrawerState extends State<NavDrawer> {
     return 'assets/admin_48.png';
   }
 
+  String getProfilePic() {
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -39,7 +46,8 @@ class _NavDrawerState extends State<NavDrawer> {
                       decoration: BoxDecoration(color: Colors.blue,),
                       child: Column(
                         children: <Widget>[
-                          Image.asset(getImageAsset(), width: 80, height: 80,),
+                          getProfilePic() != null ? Image.file(File(getProfilePic()), width: 80, height: 80,)
+                              : Image.asset(getImageAsset(), width: 80, height: 80,),
                           SizedBox(height: 15,),
                           Text(widget.title,
                             style: TextStyle(color: Colors.white, fontSize: 18),)
@@ -57,12 +65,11 @@ class _NavDrawerState extends State<NavDrawer> {
                             child: Text(Strings.UserProfile, style: TextStyle(color: Colors.blue, fontSize: 16)),
                             onPressed: () => {
                               Navigator.pop(context),
-                            Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TakeAPic()
-                            )
-                            )
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                builder: (context) => UserProfilePage(repository: repository,)
+                              ))
                             }
                           ),
                         ],

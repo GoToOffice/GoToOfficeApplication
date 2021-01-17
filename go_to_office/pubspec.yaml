@@ -24,7 +24,9 @@ dependencies:
   flutter:
     sdk: flutter
   firebase_core: any
-  firebase_auth: "^0.18.3"
+  firebase_auth: ^0.20.0+1
+  firebase_storage: ^7.0.0
+  image_picker: ^0.6.7+21
   firebase_database: any
   simple_time_range_picker: ^0.0.1
   cupertino_icons: ^0.1.3
