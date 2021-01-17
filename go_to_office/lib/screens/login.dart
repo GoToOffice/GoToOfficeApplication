@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => OfficesListPage(),
+          builder: (context) => OfficesListPage(repository: repository),
         ));
   }
 

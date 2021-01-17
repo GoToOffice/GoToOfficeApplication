@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
-import '../../model/seat.dart';
-import '../../util/strings.dart';
 import 'seat.dart';
+import '../../util/strings.dart';
+import '../../model/seat.dart';
+import '../../util/repository.dart';
+
 
 final List<Seat> SeatsList = [
   Seat(location: 'Herzeliya', id: '1', roomId: '1'),
@@ -11,16 +12,18 @@ final List<Seat> SeatsList = [
 ];
 
 class SeatsListPage extends StatefulWidget {
-  SeatsListPage(this.officeId);
+  final Repository repository;
+  SeatsListPage(this.officeId, this.repository);
   final String officeId;
 
   @override
-  State<StatefulWidget> createState() => _SeatsListPageState(officeId);
+  State<StatefulWidget> createState() => _SeatsListPageState(officeId, repository);
 }
 
 class _SeatsListPageState extends State<SeatsListPage> {
   final String officeId;
-  _SeatsListPageState(this.officeId);
+  final Repository repository;
+  _SeatsListPageState(this.officeId, this.repository);
   @override
   Widget build(BuildContext context) {
     // Object officateAssreddress = {};
@@ -39,7 +42,8 @@ class _SeatsListPageState extends State<SeatsListPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SeatPage(null, this.officeId)),
+                          builder: (context) =>
+                              SeatPage(null, this.officeId, null, repository)),
                     );
                   },
                 ),
@@ -51,7 +55,7 @@ class _SeatsListPageState extends State<SeatsListPage> {
                     itemBuilder: (BuildContext context, int index) {
                       return new GestureDetector(
                           onTap: () =>
-                              openSeatPage(SeatsList[index].id, this.officeId),
+                              openSeatPage(SeatsList[index].id, null, null),
                           child: Container(
                             height: 50,
                             margin: EdgeInsets.all(2),
@@ -72,12 +76,12 @@ class _SeatsListPageState extends State<SeatsListPage> {
             )));
   }
 
-  openSeatPage(id, officeId) {
+  openSeatPage(seatId, roomId, officeId) {
     Navigator.push(
       context,
       new MaterialPageRoute(
         builder: (context) {
-          return new SeatPage(id, officeId);
+          return new SeatPage(seatId, officeId, null, repository);
         },
       ),
     );

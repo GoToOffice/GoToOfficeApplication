@@ -1,31 +1,29 @@
+import '../../model/seat.dart';
 import 'package:flutter/material.dart';
+import '../../util/repository.dart';
 
 class SeatPage extends StatefulWidget {
-  SeatPage(this.seatId, this.officeId);
-  final String seatId;
+  SeatPage(this.seat, this.officeId, this.roomId, this.repository);
+  final Seat seat;
   final String officeId;
+  final String roomId;
+  final Repository repository;
 
   @override
-  State<StatefulWidget> createState() => _SeatPageState(seatId, officeId);
+  State<StatefulWidget> createState() =>
+      _SeatPageState(seat, roomId, officeId, repository);
 }
 
 class _SeatPageState extends State<SeatPage> {
-  final String seatId;
+  final Seat seat;
+  final String roomId;
   final String officeId;
-  String roomId;
-  String seatLocation;
-  _SeatPageState(this.seatId, this.officeId);
+  final Repository repository;
+
+  _SeatPageState(this.seat, this.roomId, this.officeId, this.repository);
   @override
   Widget build(BuildContext context) {
-    this.roomId = '1';
-    if (this.seatId != null) {
-      // call API to get get office also get the office name
-      this.seatLocation = 'Near a window';
-    } else {
-      this.seatLocation = '';
-    }
-
-    // Object officateAssreddress = {};
+    //this.roomId = '1';
     return Scaffold(
         appBar: AppBar(
           title: Text("Seats Manager"),
@@ -36,15 +34,18 @@ class _SeatPageState extends State<SeatPage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                    initialValue: this.seatLocation,
                     decoration: InputDecoration(
                         hintText: 'Please insert Seat Loaction in the room'),
                     onChanged: (String inputString) {
                       setState(() {
-                        seatLocation = inputString;
+                        this.seat.location = inputString;
                       });
                     }),
               ],
             )));
   }
+
+  updateSeat() {}
+
+  getSeat(id) {}
 }

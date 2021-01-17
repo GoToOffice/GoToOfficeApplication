@@ -1,37 +1,31 @@
 import 'package:flutter/material.dart';
-
-import '../../util/strings.dart';
+import 'package:go_to_office/main.dart';
 import 'seat.dart';
 import 'seats_list.dart';
+import '../../util/strings.dart';
+import '../../model/office.dart';
+import '../../util/repository.dart';
 
 class OfficePage extends StatefulWidget {
-  OfficePage(this.id);
-
-  final String id;
+  OfficePage({this.office, this.repository});
+  Office office;
+  final Repository repository;
   @override
-  State<StatefulWidget> createState() => _OfficePageState(id);
+  State<StatefulWidget> createState() => _OfficePageState(office, repository);
 }
 
 class _OfficePageState extends State<OfficePage> {
-  final String id;
-  String officeName;
-  String officeCoutnry;
-  String officeDescription;
-  _OfficePageState(this.id);
-  @override
-  Widget build(BuildContext context) {
-    if (this.id != null) {
-      // call API to get get office
-      this.officeName = 'Herzeliya';
-      this.officeCoutnry = 'Israel';
-      this.officeDescription = 'Office description';
-    } else {
-      this.officeName = '';
-      this.officeCoutnry = '';
-      this.officeDescription = '';
-    }
+  final Office office;
+  final Repository repository;
+  bool _isSaveButtonDisabled;
 
-    // Object officateAssreddress = {};
+  _OfficePageState(this.office, this.repository);
+  @override
+  void initState() {
+    _isSaveButtonDisabled = false;
+  }
+
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text(Strings.office_manager),
@@ -42,39 +36,50 @@ class _OfficePageState extends State<OfficePage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                    initialValue: this.officeName,
+                    initialValue: this.office.name,
                     decoration:
                         InputDecoration(hintText: Strings.insert_office_name),
                     onChanged: (String inputString) {
                       setState(() {
-                        officeName = inputString;
+                        this.office.name = inputString;
                       });
                     }),
                 TextFormField(
-                    initialValue: this.officeCoutnry,
+                    initialValue: this.office.country,
                     decoration: InputDecoration(
                         hintText: Strings.insert_office_country),
                     onChanged: (String inputString) {
                       setState(() {
-                        officeCoutnry = inputString;
+                        this.office.country = inputString;
                       });
                     }),
                 TextFormField(
-                    initialValue: this.officeDescription,
+                    initialValue: this.office.description,
                     decoration: InputDecoration(
                         hintText: Strings.insert_office_description),
                     onChanged: (String inputString) {
                       setState(() {
-                        officeDescription = inputString;
+                        this.office.description = inputString;
                       });
                     }),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: ElevatedButton(
+                      child: Text(Strings.save),
+                      onPressed: _isSaveButtonDisabled
+                          ? null
+                          : () {
+                              updateOffice();
+                            }),
+                ),
                 ElevatedButton(
                   child: Text(Strings.add_new_seat),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SeatPage(null, this.id)),
+                          builder: (context) =>
+                              SeatPage(null, null, null, repository)),
                     );
                   },
                 ),
@@ -84,11 +89,20 @@ class _OfficePageState extends State<OfficePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SeatsListPage(this.id)),
+                          builder: (context) =>
+                              SeatsListPage(this.office.id, this.repository)),
                     );
                   },
                 ),
               ],
             )));
+  }
+
+  Future<bool> updateOffice() {
+    if (repository != null) {
+      return repository.updateOffice(this.office);
+    } else {
+      showMessage('problem connecting to DB', 'Error');
+    }
   }
 }
