@@ -1,12 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_to_office/screens/reservations.dart';
-import 'package:go_to_office/util/repository.dart';
+import '../util/repository.dart';
 import '../main.dart';
 import '../util/strings.dart';
 import 'admin/offices_list.dart';
-
- 
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -105,12 +103,15 @@ class _LoginPageState extends State<LoginPage> {
       String _password = _passTextController.text?.toString();
 
       if (_userCredentialsValidation(_email, _password)) {
-        FirebaseRepository.firebaseRepository.signIn(_email, _password).then((value) {
+        FirebaseRepository.firebaseRepository.signIn(_email, _password).then(
+            (value) {
           _dispatchLogin(pressedOption, value);
         }, onError: (error) {
           if (error is FirebaseAuthException &&
               error.code == "user-not-found") {
-            FirebaseRepository.firebaseRepository.register(_email, _password).then((value) {
+            FirebaseRepository.firebaseRepository
+                .register(_email, _password)
+                .then((value) {
               _dispatchLogin(pressedOption, value);
             }, onError: (error) {
               _onError(error);
@@ -173,7 +174,9 @@ class _LoginPageState extends State<LoginPage> {
             child: const Text(Strings.sign_out_button),
             textColor: Theme.of(context).buttonColor,
             onPressed: () {
-              FirebaseRepository.firebaseRepository.signOut().then((value) => {_showSnack(value)});
+              FirebaseRepository.firebaseRepository
+                  .signOut()
+                  .then((value) => {_showSnack(value)});
             },
           );
         })

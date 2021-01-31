@@ -3,7 +3,6 @@ import 'office.dart';
 import '../../util/strings.dart';
 import '../../model/office.dart';
 import '../../util/repository.dart';
-import '../../main.dart';
 
 class OfficesListPage extends StatefulWidget {
   const OfficesListPage({Key key}) : super(key: key);
@@ -82,7 +81,7 @@ class _OfficesListPageState extends State<OfficesListPage> {
   }
 
   Future<List<Office>> getOfficesList() async {
-    final response = await  FirebaseRepository.firebaseRepository.fetchOffices();
+    final response = await FirebaseRepository.firebaseRepository.fetchOffices();
     return response;
   }
 }
