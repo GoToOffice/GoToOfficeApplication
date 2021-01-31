@@ -1,25 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_to_office/screens/reservations.dart';
-
-import '../util/repository.dart';
+import 'package:go_to_office/util/repository.dart';
+import '../main.dart';
 import '../util/strings.dart';
 import 'admin/offices_list.dart';
 
+ 
+
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title, this.repository}) : super(key: key);
+  LoginPage({Key key, this.title}) : super(key: key);
 
   final String title;
-  final Repository repository;
 
   @override
-  _LoginPageState createState() => _LoginPageState(repository);
+  _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  _LoginPageState(this.repository);
-  final Repository repository;
-
+  _LoginPageState();
+//repositoryRepository = FirebaseRepository.firebaseRepository;
   void onUserLoggedIn() {
     Navigator.push(
       context,
@@ -34,13 +34,12 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => OfficesListPage(repository: repository),
+          builder: (context) => OfficesListPage(),
         ));
   }
 
   final _userTextController = TextEditingController();
   final _passTextController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void dispose() {
@@ -53,11 +52,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     void _showSnack(String text) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(text)));
+      scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(text)));
     }
 
     void _showError(String text) {
-      _scaffoldKey.currentState.showSnackBar(
+      scaffoldKey.currentState.showSnackBar(
           SnackBar(content: Text(text), backgroundColor: Colors.red));
     }
 
@@ -106,12 +105,12 @@ class _LoginPageState extends State<LoginPage> {
       String _password = _passTextController.text?.toString();
 
       if (_userCredentialsValidation(_email, _password)) {
-        repository.signIn(_email, _password).then((value) {
+        FirebaseRepository.firebaseRepository.signIn(_email, _password).then((value) {
           _dispatchLogin(pressedOption, value);
         }, onError: (error) {
           if (error is FirebaseAuthException &&
               error.code == "user-not-found") {
-            repository.register(_email, _password).then((value) {
+            FirebaseRepository.firebaseRepository.register(_email, _password).then((value) {
               _dispatchLogin(pressedOption, value);
             }, onError: (error) {
               _onError(error);
@@ -174,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
             child: const Text(Strings.sign_out_button),
             textColor: Theme.of(context).buttonColor,
             onPressed: () {
-              repository.signOut().then((value) => {_showSnack(value)});
+              FirebaseRepository.firebaseRepository.signOut().then((value) => {_showSnack(value)});
             },
           );
         })
@@ -183,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
         appBar: appBar,
-        key: _scaffoldKey,
+        key: scaffoldKey,
         body: SingleChildScrollView(
           child: Center(
             child: Container(

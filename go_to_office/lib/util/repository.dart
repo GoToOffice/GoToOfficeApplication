@@ -4,11 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:go_to_office/main.dart';
 import 'package:go_to_office/model/office.dart';
+import 'package:go_to_office/model/seat.dart';
+
 import 'strings.dart';
 
 abstract class Repository {
   Future initialize() async {}
+
+  static Future<FirebaseRepository> create() async {}
 
   Future<String> register(String email, String password) async {}
 
@@ -17,14 +22,21 @@ abstract class Repository {
   Future<String> signOut() async {}
 
   Future<List<Office>> fetchOffices() async {}
+
   Future<bool> updateOffice(Office newOffice) async {}
 }
-
 class FirebaseRepository implements Repository {
-  FirebaseAuth _auth;
+  static FirebaseAuth _auth;
+  FirebaseRepository._();
+  static FirebaseRepository firebaseRepository;
 
-  @override
-  Future initialize() async {
+  static Future<FirebaseRepository> create() async {
+    firebaseRepository = FirebaseRepository._();
+    await firebaseRepository.initialize();
+    return firebaseRepository;
+  }
+
+  Future<void> initialize() async {
     await Firebase.initializeApp();
     _auth = FirebaseAuth.instance;
   }
@@ -90,7 +102,7 @@ class FirebaseRepository implements Repository {
           .push()
           .set(office)
           .catchError((error) {
-        print("Something went wrong: ${error.message}");
+        showMessage("Something went wrong: ${error.message}", 'Error');
         return false;
       });
     } else {
@@ -99,13 +111,38 @@ class FirebaseRepository implements Repository {
           .child("offices")
           .child(newOffice.id)
           .set(office)
-          .catchError((error) {
-        print("Something went wrong: ${error.message}");
+          .then((v) {
+        showMessage("Office was saved succesfuly", 'Message');
+      }).catchError((error) {
+        showMessage("Something went wrong: ${error.message}", 'Error');
       });
     }
   }
 }
 
+Future<List<Seat>> fetchSeatsByOfficeId(String officeID) async {
+    List<Seat> list = List();
+    if (officeID.isEmpty) {
+      return list;
+    }
+    var snapshot = await FirebaseDatabase.instance
+        .reference()
+        .child("seats")
+        .child(officeID)
+        .once();
+    LinkedHashMap seats = snapshot.value;
+    if (seats != null) {
+      seats.forEach((key, val) {
+        list.add(Seat(
+            id: key,
+            chairType: val["chairType"],
+            location: val["location"],
+            roomId: val["roomId"],
+            type: val["type"]));
+      });
+    }
+    return list;
+  }
 class ErrorPage extends StatelessWidget {
   ErrorPage({Key key, this.title}) : super(key: key);
 

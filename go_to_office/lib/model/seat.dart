@@ -3,9 +3,17 @@ import 'package:flutter/material.dart';
 
 class Seat {
   String id;
+  String chairType;
   String location;
   String roomId;
   String officeId;
+  String type;
 
-  Seat({this.id, this.location, this.roomId, this.officeId});
+  Seat(
+      {this.id,
+      this.chairType,
+      this.location,
+      this.roomId,
+      this.officeId,
+      this.type});
 }

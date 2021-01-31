@@ -4,7 +4,6 @@ import '../../util/strings.dart';
 import '../../model/seat.dart';
 import '../../util/repository.dart';
 
-
 final List<Seat> SeatsList = [
   Seat(location: 'Herzeliya', id: '1', roomId: '1'),
   Seat(location: 'Budapest', id: '2', roomId: '1'),
@@ -12,18 +11,16 @@ final List<Seat> SeatsList = [
 ];
 
 class SeatsListPage extends StatefulWidget {
-  final Repository repository;
-  SeatsListPage(this.officeId, this.repository);
+  SeatsListPage(this.officeId);
   final String officeId;
 
   @override
-  State<StatefulWidget> createState() => _SeatsListPageState(officeId, repository);
+  State<StatefulWidget> createState() => _SeatsListPageState(officeId);
 }
 
 class _SeatsListPageState extends State<SeatsListPage> {
   final String officeId;
-  final Repository repository;
-  _SeatsListPageState(this.officeId, this.repository);
+  _SeatsListPageState(this.officeId);
   @override
   Widget build(BuildContext context) {
     // Object officateAssreddress = {};
@@ -43,7 +40,7 @@ class _SeatsListPageState extends State<SeatsListPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              SeatPage(null, this.officeId, null, repository)),
+                              SeatPage(null, this.officeId, null)),
                     );
                   },
                 ),
@@ -81,7 +78,7 @@ class _SeatsListPageState extends State<SeatsListPage> {
       context,
       new MaterialPageRoute(
         builder: (context) {
-          return new SeatPage(seatId, officeId, null, repository);
+          return new SeatPage(seatId, officeId, null);
         },
       ),
     );

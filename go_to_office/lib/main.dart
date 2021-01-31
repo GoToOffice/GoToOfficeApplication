@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'screens/login.dart';
 import 'util/repository.dart';
 import 'util/strings.dart';
 
-void main() {
+GlobalKey<ScaffoldState> scaffoldKey;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  scaffoldKey = new GlobalKey<ScaffoldState>();
   runApp(GTOApp());
 }
 
@@ -27,21 +32,18 @@ void showMessage(String text, String messageType) {
       }
       break;
   }
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  _scaffoldKey.currentState.showSnackBar(
+  scaffoldKey.currentState.showSnackBar(
       SnackBar(content: Text(text), backgroundColor: backgroundColor));
 }
 
 class GTOApp extends StatelessWidget {
   // This widget is the root of the application.
 
-  final Repository firebaseAuth = FirebaseRepository();
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       // Initialize FlutterFire
-      future: firebaseAuth.initialize(),
+      future: FirebaseRepository.create(),
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
@@ -55,7 +57,7 @@ class GTOApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: LoginPage(title: Strings.app_name, repository: firebaseAuth),
+            home: LoginPage(title: Strings.app_name),
           );
         }
 

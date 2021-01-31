@@ -7,19 +7,17 @@ import '../../model/office.dart';
 import '../../util/repository.dart';
 
 class OfficePage extends StatefulWidget {
-  OfficePage({this.office, this.repository});
+  OfficePage({this.office});
   Office office;
-  final Repository repository;
   @override
-  State<StatefulWidget> createState() => _OfficePageState(office, repository);
+  State<StatefulWidget> createState() => _OfficePageState(office);
 }
 
 class _OfficePageState extends State<OfficePage> {
   final Office office;
-  final Repository repository;
   bool _isSaveButtonDisabled;
 
-  _OfficePageState(this.office, this.repository);
+  _OfficePageState(this.office);
   @override
   void initState() {
     _isSaveButtonDisabled = false;
@@ -78,8 +76,7 @@ class _OfficePageState extends State<OfficePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              SeatPage(null, null, null, repository)),
+                          builder: (context) => SeatPage(null, null, null)),
                     );
                   },
                 ),
@@ -89,8 +86,7 @@ class _OfficePageState extends State<OfficePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              SeatsListPage(this.office.id, this.repository)),
+                          builder: (context) => SeatsListPage(this.office.id)),
                     );
                   },
                 ),
@@ -99,8 +95,8 @@ class _OfficePageState extends State<OfficePage> {
   }
 
   Future<bool> updateOffice() {
-    if (repository != null) {
-      return repository.updateOffice(this.office);
+    if (FirebaseRepository.firebaseRepository != null) {
+      return FirebaseRepository.firebaseRepository.updateOffice(this.office);
     } else {
       showMessage('problem connecting to DB', 'Error');
     }

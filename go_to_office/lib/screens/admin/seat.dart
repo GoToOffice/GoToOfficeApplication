@@ -3,27 +3,23 @@ import 'package:flutter/material.dart';
 import '../../util/repository.dart';
 
 class SeatPage extends StatefulWidget {
-  SeatPage(this.seat, this.officeId, this.roomId, this.repository);
+  SeatPage(this.seat, this.officeId, this.roomId);
   final Seat seat;
   final String officeId;
   final String roomId;
-  final Repository repository;
 
   @override
-  State<StatefulWidget> createState() =>
-      _SeatPageState(seat, roomId, officeId, repository);
+  State<StatefulWidget> createState() => _SeatPageState(seat, roomId, officeId);
 }
 
 class _SeatPageState extends State<SeatPage> {
   final Seat seat;
   final String roomId;
   final String officeId;
-  final Repository repository;
 
-  _SeatPageState(this.seat, this.roomId, this.officeId, this.repository);
+  _SeatPageState(this.seat, this.roomId, this.officeId);
   @override
   Widget build(BuildContext context) {
-    //this.roomId = '1';
     return Scaffold(
         appBar: AppBar(
           title: Text("Seats Manager"),

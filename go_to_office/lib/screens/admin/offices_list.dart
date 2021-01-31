@@ -3,20 +3,19 @@ import 'office.dart';
 import '../../util/strings.dart';
 import '../../model/office.dart';
 import '../../util/repository.dart';
+import '../../main.dart';
 
 class OfficesListPage extends StatefulWidget {
-  final Repository repository;
-  const OfficesListPage({Key key, this.repository}) : super(key: key);
+  const OfficesListPage({Key key}) : super(key: key);
 
   @override
   _OfficesListPageState createState() {
-    return _OfficesListPageState(repository);
+    return _OfficesListPageState();
   }
 }
 
 class _OfficesListPageState extends State<OfficesListPage> {
-  final Repository repository;
-  _OfficesListPageState(this.repository);
+  _OfficesListPageState();
   static Future<List<Office>> officesList;
 
   @override
@@ -76,14 +75,14 @@ class _OfficesListPageState extends State<OfficesListPage> {
       context,
       new MaterialPageRoute(
         builder: (context) {
-          return new OfficePage(office: office, repository: repository);
+          return new OfficePage(office: office);
         },
       ),
     );
   }
 
   Future<List<Office>> getOfficesList() async {
-    final response = await repository.fetchOffices();
+    final response = await  FirebaseRepository.firebaseRepository.fetchOffices();
     return response;
   }
 }
