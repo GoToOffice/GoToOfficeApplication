@@ -95,8 +95,8 @@ class _OfficePageState extends State<OfficePage> {
   }
 
   Future<bool> updateOffice() {
-    if (FirebaseRepository.firebaseRepository != null) {
-      return FirebaseRepository.firebaseRepository.updateOffice(this.office);
+    if (FirebaseRepository != null) {
+      return FirebaseRepository.updateOffice(this.office);
     } else {
       showMessage('problem connecting to DB', 'Error');
     }

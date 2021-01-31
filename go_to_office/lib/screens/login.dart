@@ -103,13 +103,13 @@ class _LoginPageState extends State<LoginPage> {
       String _password = _passTextController.text?.toString();
 
       if (_userCredentialsValidation(_email, _password)) {
-        FirebaseRepository.firebaseRepository.signIn(_email, _password).then(
+        FirebaseRepository.signIn(_email, _password).then(
             (value) {
           _dispatchLogin(pressedOption, value);
         }, onError: (error) {
           if (error is FirebaseAuthException &&
               error.code == "user-not-found") {
-            FirebaseRepository.firebaseRepository
+            FirebaseRepository
                 .register(_email, _password)
                 .then((value) {
               _dispatchLogin(pressedOption, value);
@@ -174,8 +174,7 @@ class _LoginPageState extends State<LoginPage> {
             child: const Text(Strings.sign_out_button),
             textColor: Theme.of(context).buttonColor,
             onPressed: () {
-              FirebaseRepository.firebaseRepository
-                  .signOut()
+              FirebaseRepository.signOut()
                   .then((value) => {_showSnack(value)});
             },
           );

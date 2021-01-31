@@ -81,7 +81,7 @@ class _OfficesListPageState extends State<OfficesListPage> {
   }
 
   Future<List<Office>> getOfficesList() async {
-    final response = await FirebaseRepository.firebaseRepository.fetchOffices();
+    final response = await FirebaseRepository.fetchOffices();
     return response;
   }
 }

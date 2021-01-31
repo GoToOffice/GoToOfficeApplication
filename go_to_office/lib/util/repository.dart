@@ -11,27 +11,30 @@ import 'package:go_to_office/model/seat.dart';
 import 'strings.dart';
 
 abstract class Repository {
-  Future initialize() async {}
+  static Future initialize() async {}
 
   static Future<FirebaseRepository> create() async {}
 
-  Future<String> register(String email, String password) async {}
+  static Future<String> register(String email, String password) async {}
 
-  Future<String> signIn(String email, String password) async {}
+  static Future<String> signIn(String email, String password) async {}
 
-  Future<String> signOut() async {}
+  static Future<String> signOut() async {}
 
-  Future<List<Office>> fetchOffices() async {}
+  static Future<List<Office>> fetchOffices() async {}
 
-  Future<bool> updateOffice(Office newOffice) async {}
+  static Future<bool> updateOffice(Office newOffice) async {}
+
+  static Future<List<Seat>> fetchSeatsByOfficeId(String officeId) async {}
 }
+
 class FirebaseRepository implements Repository {
   static FirebaseAuth _auth;
   FirebaseRepository._();
-  static FirebaseRepository firebaseRepository;
+  //static FirebaseRepository firebaseRepository;
 
   static Future<FirebaseRepository> create() async {
-    firebaseRepository = FirebaseRepository._();
+    var firebaseRepository = FirebaseRepository._();
     await firebaseRepository.initialize();
     return firebaseRepository;
   }
@@ -42,7 +45,7 @@ class FirebaseRepository implements Repository {
   }
 
   @override
-  Future<String> signOut() async {
+  static Future<String> signOut() async {
     User user = _auth.currentUser;
     if (user == null) {
       return Strings.sign_out_failed;
@@ -52,21 +55,21 @@ class FirebaseRepository implements Repository {
   }
 
   @override
-  Future<String> register(String _email, String _password) async {
+  static Future<String> register(String _email, String _password) async {
     UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: _email, password: _password);
     return userCredential.user.uid;
   }
 
   @override
-  Future<String> signIn(String _email, String _password) async {
+  static Future<String> signIn(String _email, String _password) async {
     UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _email, password: _password);
     return userCredential.user.uid;
   }
 
   @override
-  Future<List<Office>> fetchOffices() async {
+  static Future<List<Office>> fetchOffices() async {
     var snapshot = await FirebaseDatabase.instance
         .reference()
         .child("offices")
@@ -89,7 +92,7 @@ class FirebaseRepository implements Repository {
   }
 
   @override
-  Future<bool> updateOffice(Office newOffice) async {
+  static Future<bool> updateOffice(Office newOffice) async {
     final office = {
       'name': newOffice.name,
       'description': newOffice.description,
@@ -120,29 +123,30 @@ class FirebaseRepository implements Repository {
   }
 }
 
-Future<List<Seat>> fetchSeatsByOfficeId(String officeID) async {
-    List<Seat> list = List();
-    if (officeID.isEmpty) {
-      return list;
-    }
-    var snapshot = await FirebaseDatabase.instance
-        .reference()
-        .child("seats")
-        .child(officeID)
-        .once();
-    LinkedHashMap seats = snapshot.value;
-    if (seats != null) {
-      seats.forEach((key, val) {
-        list.add(Seat(
-            id: key,
-            chairType: val["chairType"],
-            location: val["location"],
-            roomId: val["roomId"],
-            type: val["type"]));
-      });
-    }
+Future<List<Seat>> fetchSeatsByOfficeId(String officeId) async {
+  List<Seat> list = List();
+  if (officeId.isEmpty) {
     return list;
   }
+  var snapshot = await FirebaseDatabase.instance
+      .reference()
+      .child("seats")
+      .child(officeId)
+      .once();
+  LinkedHashMap seats = snapshot.value;
+  if (seats != null) {
+    seats.forEach((key, val) {
+      list.add(Seat(
+          id: key,
+          chairType: val["chairType"],
+          location: val["location"],
+          roomId: val["roomId"],
+          type: val["type"]));
+    });
+  }
+  return list;
+}
+
 class ErrorPage extends StatelessWidget {
   ErrorPage({Key key, this.title}) : super(key: key);
 
